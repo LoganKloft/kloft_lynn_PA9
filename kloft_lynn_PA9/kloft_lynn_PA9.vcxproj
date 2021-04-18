@@ -144,6 +144,21 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelEditor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="roads2W.png" />
+    <Image Include="tileSet_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="level_list.txt" />
+    <Text Include="testLevel.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Bullpen3D.ttf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

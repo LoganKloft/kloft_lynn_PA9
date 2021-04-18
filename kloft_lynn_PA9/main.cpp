@@ -6,30 +6,53 @@
 #include <SFML/System.hpp>
 #include <SFML/Network.hpp>
 
+#include "Level.h"
+#include "LevelEditor.h"
+
+#define WINDOW_WIDTH 1408
+#define WINDOW_HEIGHT 1024
+
+/*
+*	Credits:
+*	tileset: KUBI Games https://kubigames.itch.io/road-tiles
+*	font: Typodermic Fonts 	https://www.1001freefonts.com/bullpen-3d.font
+*/
 int main(void)
 {
-	sf::RenderWindow window(sf::VideoMode(1480, 1080), "Tower Defense", sf::Style::Close);
-	sf::CircleShape range(40);
-	range.setFillColor(sf::Color::Red);
+	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tower Defense", sf::Style::Close);
+	LevelEditor lEditor;
+
+	sf::Font font;
+	font.loadFromFile("Arialic Hollow.ttf");
+	sf::Text editLevelText("EDIT", font, 100);
+	editLevelText.move(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 100);
+
 	while (window.isOpen())
 	{
-		window.clear();
 
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			switch (event.type)
 			{
+			case sf::Event::Closed:
 				window.close();
+				break;
+
+			case sf::Event::MouseButtonPressed:
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					lEditor.edit(window);
+				}
+				break;
+
+			default:
+				break;
 			}
 		}
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-		{
-			range.setPosition(sf::Mouse::getPosition(window).x - range.getRadius(), sf::Mouse::getPosition(window).y - range.getRadius());
-			window.draw(range);
-		}
-
+		window.clear();
+		window.draw(editLevelText);
 		window.display();
 	}
 
