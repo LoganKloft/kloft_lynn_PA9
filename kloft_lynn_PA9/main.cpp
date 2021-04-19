@@ -27,10 +27,9 @@ int main(void)
 	sf::Text editLevelText("EDIT", font, 100);
 	editLevelText.move(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 100);
 
+	sf::Event event;
 	while (window.isOpen())
 	{
-
-		sf::Event event;
 		while (window.pollEvent(event))
 		{
 			switch (event.type)
@@ -39,7 +38,7 @@ int main(void)
 				window.close();
 				break;
 
-			case sf::Event::MouseButtonPressed:
+			case sf::Event::MouseButtonReleased:
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
 					lEditor.edit(window);

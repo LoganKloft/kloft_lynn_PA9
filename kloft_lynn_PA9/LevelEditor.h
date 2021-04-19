@@ -11,6 +11,13 @@
 #define WINDOW_WIDTH 1408
 #define WINDOW_HEIGHT 1024
 
+struct TileContainer
+{
+	sf::RectangleShape shape;
+	sf::IntRect hitbox;
+	int tileNumber;
+};
+
 class LevelEditor
 {
 public:
@@ -95,27 +102,44 @@ public:
 			return false;
 		}
 
+		std::vector<struct TileContainer> tileOptions;
+		generateTileOptions("tileSet_1.png", sf::Vector2u(64, 64), 8, 3, tileOptions);
+
 		while (tileSelector.isOpen())
 		{
-			sf::Event event;
-			while (tileSelector.pollEvent(event))
+			sf::Event event1;
+			while (tileSelector.pollEvent(event1))
 			{
-				switch (event.type)
+				switch (event1.type)
 				{
 				case sf::Event::Closed:
 					tileSelector.close();
 					return true;
+				case sf::Event::MouseButtonPressed:
+					if (event1.mouseButton.button == sf::Mouse::Left)
+					{
+						for (int i = 0; i < tileOptions.size(); i++)
+						{
+							if (tileOptions[i].hitbox.contains(event1.mouseButton.x, event1.mouseButton.y))
+							{
+								tileNumber = tileOptions[i].tileNumber;
+								break;
+							}
+						}
+					}
+					break;
 				default:
 					break;
 				}
 			}
 
-			while (window.pollEvent(event))
+			sf::Event event2;
+			while (window.pollEvent(event2))
 			{
-				switch (event.type)
+				switch (event2.type)
 				{
 				case sf::Event::MouseButtonPressed:
-					if (event.mouseButton.button == sf::Mouse::Left)
+					if (event2.mouseButton.button == sf::Mouse::Left)
 					{
 						int x = sf::Mouse::getPosition(window).x / 64;
 						int y = sf::Mouse::getPosition(window).y / 64;
@@ -126,6 +150,10 @@ public:
 			}
 
 			tileSelector.clear();
+			for (int i = 0; i < tileOptions.size(); i++)
+			{
+				tileSelector.draw(tileOptions[i].shape);
+			}
 			tileSelector.display();
 			window.clear();
 			window.draw(map);
@@ -133,4 +161,39 @@ public:
 		}
 	}
 private:
+
+	sf::Texture m_tileset;
+
+	void generateTileOptions(std::string tileSetFile, sf::Vector2u tileSize, int width, int height, std::vector<struct TileContainer>& tileOptions)
+	{
+		if (!m_tileset.loadFromFile(tileSetFile))
+		{
+			return;
+		}
+
+		int offsetScale = 0;
+		int tileNumber = 0;
+		for (int i = 0; i < height; i++)
+		{
+			for (int j = 0; j < width; j++)
+			{
+				sf::RectangleShape shape(sf::Vector2f(90, 90));
+				shape.setTexture(&m_tileset);
+				shape.setTextureRect(sf::IntRect(j * tileSize.x, i * tileSize.y , tileSize.x, tileSize.y));
+				shape.move(sf::Vector2f((offsetScale % 2) * 90, (offsetScale / 2) * 90));
+
+				sf::IntRect hitbox((offsetScale % 2) * 90, (offsetScale / 2) * 90, 90, 90);
+
+				struct TileContainer newTileOption;
+				newTileOption.shape = shape;
+				newTileOption.hitbox = hitbox;
+				newTileOption.tileNumber = tileNumber;
+
+				tileOptions.push_back(newTileOption);
+
+				offsetScale++;
+				tileNumber++;
+			}
+		}
+	}
 };

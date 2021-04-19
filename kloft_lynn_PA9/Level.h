@@ -19,13 +19,13 @@
 #define MAX_LEVEL_HEIGHT 16
 
 // Tileset textures
-#define TILE_VERTICAL 5
-#define TILE_HORIZONTAL 4
-#define TILE_TOPL_CORNER 9
-#define TILE_TOPR_CORNER 10
-#define TILE_BOTTOMR_CORNER 11
-#define TILE_BOTTOML_CORNER 12
-#define TILE_GRASS 19
+#define TILE_VERTICAL 3
+#define TILE_HORIZONTAL 2
+#define TILE_TOPL_CORNER 8
+#define TILE_TOPR_CORNER 9
+#define TILE_BOTTOMR_CORNER 10
+#define TILE_BOTTOML_CORNER 11
+#define TILE_GRASS 18
 
 class Level : public sf::Drawable, public sf::Transformable
 {
@@ -35,7 +35,8 @@ public:
     {
         // set up tiles array
         if (tiles != nullptr) delete[] tiles;
-        tiles = new int[width * height]();
+        tiles = new int[width * height];
+        for (int i = 0; i < width * height; i++) tiles[i] = 18;
         
         // open file to load into tiles array
         if(tileFiles != "")
