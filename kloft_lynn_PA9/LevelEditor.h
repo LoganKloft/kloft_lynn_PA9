@@ -99,12 +99,9 @@ public:
 		sf::Font font;
 		if (!font.loadFromFile("Arialic Hollow.ttf"))
 		{
-			std::cout << "Failed to load font: Main(26)" << std::endl;
+			std::cout << "Failed to load font \"Arrialic Hollow.ttf\": LevelEditor(102)" << std::endl;
 			return -1;
 		}
-
-		// window stores the icons of tiles to use in level creation
-		sf::RenderWindow tileSelector(sf::VideoMode(180, 1024), "Tile Selector");
 		Level map;
 
 		// the tile number corresponding to texture being applied in level
@@ -127,6 +124,8 @@ public:
 			sf::Vector2f(window.getSize().x / 2 - 64, 0), "check_mark.png");
 		Button deleteLevel(sf::Vector2f(64, 32), 
 			sf::Vector2f(window.getSize().x / 2, 0), "x_mark.png");
+		Button viewTileMenuButton(sf::Vector2f(32, 64),
+			sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), "vertical_3lines.png");
 
 		// Stores file name to store in level_list.txt
 		std::string saveName;
@@ -135,45 +134,33 @@ public:
 		saveFileText.setPosition(sf::Vector2f(400, window.getSize().y / 2 - 15));
 
 		// controls selection of tileNumber
-		while (tileSelector.isOpen())
+		while (true)
 		{
-			sf::Event event1;
-			while (tileSelector.pollEvent(event1))
-			{
-				switch (event1.type)
-				{
-				case sf::Event::Closed:
-					tileSelector.close();
-					return true;
-				case sf::Event::MouseButtonPressed:
-					if (event1.mouseButton.button == sf::Mouse::Left)
-					{
-						for (int i = 0; i < tileOptions.size(); i++)
-						{
-							if (tileOptions[i].hitbox.contains(event1.mouseButton.x, event1.mouseButton.y))
-							{
-								tileNumber = tileOptions[i].tileNumber;
-								break;
-							}
-						}
-					}
-					break;
-				default:
-					break;
-				}
-			}
-
 			sf::Event event2;
 			while (window.pollEvent(event2))
 			{
 				switch (event2.type)
 				{
 				case sf::Event::MouseButtonPressed:
-					if ( !saveLevel.contains(event2.mouseButton.x, event2.mouseButton.y)
-						&& !deleteLevel.contains(event2.mouseButton.x, event2.mouseButton.y)
-						&& event2.mouseButton.button == sf::Mouse::Left)
+					if (event2.mouseButton.button == sf::Mouse::Left)
 					{
-						mousePressed = true;
+						bool flag = false;
+						for (int i = 0; i < tileOptions.size(); i++) // select tileNumber
+						{
+							if (viewTileMenu && tileOptions[i].hitbox.contains(event2.mouseButton.x, event2.mouseButton.y))
+							{
+								tileNumber = tileOptions[i].tileNumber;
+								flag = true;
+								break;
+							}
+						}
+						if (flag) break;
+						if (!saveLevel.contains(event2.mouseButton.x, event2.mouseButton.y) // only allow tile placement if mouse not selecting a button
+							&& !deleteLevel.contains(event2.mouseButton.x, event2.mouseButton.y)
+							&& !viewTileMenuButton.contains(event2.mouseButton.x, event2.mouseButton.y))
+						{
+							mousePressed = true;
+						}
 					}
 					break;
 				case sf::Event::MouseButtonReleased:
@@ -191,8 +178,11 @@ public:
 							// exit back to main menu
 							detectText = false;
 							saveFile = false;
-							tileSelector.close();
 							return true;
+						}
+						else if (viewTileMenuButton.contains(event2.mouseButton.x, event2.mouseButton.y))
+						{
+							viewTileMenu = !viewTileMenu;
 						}
 					}
 					break;
@@ -233,18 +223,20 @@ public:
 				map.setTile(sf::Vector2u(64, 64), x, y, MAX_LEVEL_WIDTH, tileNumber);
 			}
 
-			tileSelector.clear();
-			for (int i = 0; i < tileOptions.size(); i++)
-			{
-				tileSelector.draw(tileOptions[i].shape);
-			}
-			tileSelector.display();
 			window.clear();
 			window.draw(map);
+			if (viewTileMenu)
+			{
+				for (int i = 0; i < tileOptions.size(); i++)
+				{
+					window.draw(tileOptions[i].shape);
+				}
+			}
 			if (saveFile)
 			{
 				window.draw(saveFileText);
 			}
+			window.draw(viewTileMenuButton);
 			window.draw(saveLevel);
 			window.draw(deleteLevel);
 			window.display();
@@ -257,7 +249,11 @@ private:
 	bool detectText;
 	bool saveFile;
 	bool mousePressed;
+	bool viewTileMenu;
 
+	// width = image width / tileSize width in pixels
+	// height = image height / tileSize height in pixels
+	// tileSize - 64 x 64
 	void generateTileOptions(std::string tileSetFile, sf::Vector2u tileSize, int width, int height, std::vector<struct TileContainer>& tileOptions)
 	{
 		if (!m_tileset.loadFromFile(tileSetFile))

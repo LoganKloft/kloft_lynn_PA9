@@ -15,7 +15,7 @@
 /*
 *	Credits:
 *	tileset: KUBI Games https://kubigames.itch.io/road-tiles
-*	font: Typodermic Fonts 	https://www.1001freefonts.com/bullpen-3d.font
+*	font: Typodermic Fonts 	https://www.1001freefonts.com/bullpen-3d.font, Gem Fonts https://www.1001freefonts.com/arialic-hollow.font
 */
 int main(void)
 {

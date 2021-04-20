@@ -1,6 +1,6 @@
 #pragma once
 /*
-*	Based off: https://www.sfml-dev.org/tutorials/2.1/graphics-vertex-array.php
+*	Load function based off: https://www.sfml-dev.org/tutorials/2.1/graphics-vertex-array.php
 */
 
 #include <iostream>
@@ -10,15 +10,10 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
-/*
-*   tiles has width 23 and height 17 for total indicies 23*17 = 391
-* 
-*/
-
 #define MAX_LEVEL_WIDTH 22
 #define MAX_LEVEL_HEIGHT 16
 
-// Tileset textures
+// Tileset texture tile numbers
 #define TILE_VERTICAL 3
 #define TILE_HORIZONTAL 2
 #define TILE_TOPL_CORNER 8

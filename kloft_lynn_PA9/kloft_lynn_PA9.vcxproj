@@ -148,6 +148,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelEditor.h" />
+    <ClInclude Include="LevelPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="roads2W.png" />
