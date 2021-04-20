@@ -10,6 +10,9 @@
 #include <fstream>
 #include <string>
 
+#include "Level.h"
+#include "Button.h"
+
 class LevelPlayer
 {
 public:
