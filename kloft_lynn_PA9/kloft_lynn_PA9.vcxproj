@@ -145,6 +145,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelEditor.h" />
   </ItemGroup>

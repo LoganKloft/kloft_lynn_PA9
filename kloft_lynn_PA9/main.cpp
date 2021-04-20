@@ -23,7 +23,12 @@ int main(void)
 	LevelEditor lEditor;
 
 	sf::Font font;
-	font.loadFromFile("Arialic Hollow.ttf");
+	if (!font.loadFromFile("Arialic Hollow.ttf"))
+	{
+		std::cout << "Failed to load font: Main(26)" << std::endl;
+		return -1;
+	}
+
 	sf::Text editLevelText("EDIT", font, 100);
 	editLevelText.move(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 100);
 

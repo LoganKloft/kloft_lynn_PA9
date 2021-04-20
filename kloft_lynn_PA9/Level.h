@@ -43,20 +43,23 @@ public:
         {
             std::ifstream infile(tileFiles);
             if (!infile.is_open()) return false;
-            std::string line = "";
+            std::string digit = "";
 
-            unsigned int row = 0;
-            while ( std::getline(infile, line))
+            int i = 0, j = 0, count = 0;
+            while (std::getline(infile, digit, ','))
             {
-                for (unsigned int i = 0; (i < width); i++)
+                tiles[i + j * width] = stoi(digit);
+                std::cout << tiles[i + j * width] << " ";
+                i++;
+                if (i == width)
                 {
-                    tiles[i + row * width] = line[i * 2] - '0';
-                    std::cout << tiles[i + row * width] << " ";
+                    std::cout << std::endl;
+                    i = 0;
+                    j++;
                 }
-                std::cout << std::endl;
-                row++;
+                count++;
+                if (count == width * height) break;
             }
-
             infile.close();
         }
 

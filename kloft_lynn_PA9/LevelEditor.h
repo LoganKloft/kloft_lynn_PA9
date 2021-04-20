@@ -7,6 +7,7 @@
 #include <SFML/Network.hpp>
 
 #include "Level.h"
+#include "Button.h"
 
 #define WINDOW_WIDTH 1408
 #define WINDOW_HEIGHT 1024
@@ -23,14 +24,17 @@ class LevelEditor
 public:
 	std::string selectLevel(sf::RenderWindow& window)
 	{
+		level_list.clear();
 		std::ifstream infile("level_list.txt");
-		std::vector<std::string> level_list(1, "new");
+		level_list.push_back("new");
 		std::string lvl = "", str = "";
 		while (std::getline(infile, lvl, ','))
 		{
 			level_list.push_back(lvl);
 			std::cout << lvl << std::endl;
 		}
+
+		infile.close();
 
 		std::vector<sf::Text> levelListText;
 		sf::Font font;
@@ -91,10 +95,22 @@ public:
 
 	bool edit(sf::RenderWindow& window)
 	{
+		// default font for sf::Text objects
+		sf::Font font;
+		if (!font.loadFromFile("Arialic Hollow.ttf"))
+		{
+			std::cout << "Failed to load font: Main(26)" << std::endl;
+			return -1;
+		}
+
+		// window stores the icons of tiles to use in level creation
 		sf::RenderWindow tileSelector(sf::VideoMode(180, 1024), "Tile Selector");
 		Level map;
+
+		// the tile number corresponding to texture being applied in level
 		int tileNumber = 0;
 
+		// select to create a new level or edit an existing one
 		std::string levelFile = selectLevel(window);
 		if (!map.load("tileSet_1.png", sf::Vector2u(64, 64), levelFile, 22, 16))
 		{
@@ -102,9 +118,23 @@ public:
 			return false;
 		}
 
+		// generate images of tiles to use
 		std::vector<struct TileContainer> tileOptions;
 		generateTileOptions("tileSet_1.png", sf::Vector2u(64, 64), 8, 3, tileOptions);
 
+		// save and exit buttons
+		Button saveLevel(sf::Vector2f(64, 32), 
+			sf::Vector2f(window.getSize().x / 2 - 64, 0), "check_mark.png");
+		Button deleteLevel(sf::Vector2f(64, 32), 
+			sf::Vector2f(window.getSize().x / 2, 0), "x_mark.png");
+
+		// Stores file name to store in level_list.txt
+		std::string saveName;
+		sf::Text saveFileText("Enter File Name:", font, 80);
+		saveFileText.setOutlineColor(sf::Color::White);
+		saveFileText.setPosition(sf::Vector2f(400, window.getSize().y / 2 - 15));
+
+		// controls selection of tileNumber
 		while (tileSelector.isOpen())
 		{
 			sf::Event event1;
@@ -139,14 +169,68 @@ public:
 				switch (event2.type)
 				{
 				case sf::Event::MouseButtonPressed:
-					if (event2.mouseButton.button == sf::Mouse::Left)
+					if ( !saveLevel.contains(event2.mouseButton.x, event2.mouseButton.y)
+						&& !deleteLevel.contains(event2.mouseButton.x, event2.mouseButton.y)
+						&& event2.mouseButton.button == sf::Mouse::Left)
 					{
-						int x = sf::Mouse::getPosition(window).x / 64;
-						int y = sf::Mouse::getPosition(window).y / 64;
-						map.setTile(sf::Vector2u(64, 64), x, y, MAX_LEVEL_WIDTH, tileNumber);
+						mousePressed = true;
 					}
 					break;
+				case sf::Event::MouseButtonReleased:
+					if (event2.mouseButton.button == sf::Mouse::Left)
+					{
+						mousePressed = false;
+						if (saveLevel.contains(event2.mouseButton.x, event2.mouseButton.y))
+						{
+							// record keyboard input until enter key pressed
+							detectText = true;
+							saveFile = true;
+						}
+						else if (deleteLevel.contains(event2.mouseButton.x, event2.mouseButton.y))
+						{
+							// exit back to main menu
+							detectText = false;
+							saveFile = false;
+							tileSelector.close();
+							return true;
+						}
+					}
+					break;
+				case sf::Event::TextEntered:
+					if (detectText && saveFile)
+					{
+						if (event2.text.unicode == 13)
+						{
+							detectText = saveFile = false;
+							saveName += ".txt";
+							map.saveTile(saveName, 22, 16);
+							std::ofstream outfile("level_list.txt");
+							outfile << saveName << ',';
+							for (int i = 1; i < level_list.size(); i++) // start at 1 to skip new
+							{
+								if (level_list[i] != saveName) // prevent adding duplicates
+								{
+									outfile << level_list[i] << ',';
+								}
+							}
+							outfile.close();
+							return true;
+						}
+						else if(event2.text.unicode <= 128)
+						{
+							saveName += event2.text.unicode;
+							saveFileText.setString(saveName);
+						}
+					}
 				}
+			}
+
+			if (mousePressed)
+			{
+				// apply texture to tile
+				int x = sf::Mouse::getPosition(window).x / 64;
+				int y = sf::Mouse::getPosition(window).y / 64;
+				map.setTile(sf::Vector2u(64, 64), x, y, MAX_LEVEL_WIDTH, tileNumber);
 			}
 
 			tileSelector.clear();
@@ -157,12 +241,22 @@ public:
 			tileSelector.display();
 			window.clear();
 			window.draw(map);
+			if (saveFile)
+			{
+				window.draw(saveFileText);
+			}
+			window.draw(saveLevel);
+			window.draw(deleteLevel);
 			window.display();
 		}
 	}
 private:
 
 	sf::Texture m_tileset;
+	std::vector<std::string> level_list;
+	bool detectText;
+	bool saveFile;
+	bool mousePressed;
 
 	void generateTileOptions(std::string tileSetFile, sf::Vector2u tileSize, int width, int height, std::vector<struct TileContainer>& tileOptions)
 	{
