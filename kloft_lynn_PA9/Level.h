@@ -21,6 +21,8 @@
 #define TILE_BOTTOMR_CORNER 10
 #define TILE_BOTTOML_CORNER 11
 #define TILE_GRASS 18
+#define TILE_START 19
+#define TILE_END 20
 
 class Level : public sf::Drawable, public sf::Transformable
 {

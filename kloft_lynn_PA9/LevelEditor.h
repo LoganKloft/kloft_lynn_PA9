@@ -26,7 +26,6 @@ public:
 	{
 		level_list.clear();
 		std::ifstream infile("level_list.txt");
-		level_list.push_back("new");
 		std::string lvl = "", str = "";
 		while (std::getline(infile, lvl, ','))
 		{
