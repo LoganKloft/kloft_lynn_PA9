@@ -43,6 +43,30 @@
     <Image Include="tileSet_1.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="sprites\bunny.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sprites\chipmunk.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sprites\hedgehog.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sprites\raccoon.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sprites\skunk.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sprites\easy_enemy.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sprites\hard_enemy.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sprites\medium_enemy.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="testLevel.txt">
