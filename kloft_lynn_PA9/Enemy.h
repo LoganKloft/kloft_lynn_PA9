@@ -19,23 +19,43 @@
 class Enemy : public sf::Sprite
 {
 public:
-	Enemy(const sf::Texture& texture, const sf::Vector2f& pos = sf::Vector2f(0, 0)) : sf::Sprite(texture)
+	Enemy()
 	{
-		setPosition(pos);
 		health = 0;
 		damage = 0;
 		speed = 0;
 	}
 
-	void setHealth(int health)
+	Enemy(const sf::Texture& texture, float health, float damage, float speed) : sf::Sprite(texture)
+	{
+		setOrigin(32, 32);
+		this->health = health;
+		this->damage = damage;
+		this->speed = speed;
+		m_texture = texture;
+	}
+
+	Enemy(const Enemy& copy)
+	{
+		this->health = copy.getHealth();
+		this->damage = copy.getDamate();
+		this->speed = copy.getSpeed();
+		this->m_texture = copy.getTexture();
+		this->waypoints = copy.getWaypoints();
+		this->setTexture(m_texture);
+		this->setOrigin(copy.getOrigin());
+		this->setPosition(copy.getPosition());
+	}
+
+	void setHealth(float health)
 	{
 		this->health = health;
 	}
-	void setDamage(int damage)
+	void setDamage(float damage)
 	{
 		this->damage = damage;
 	}
-	void setSpeed(int speed)
+	void setSpeed(float speed)
 	{
 		this->speed = speed;
 	}
@@ -44,11 +64,30 @@ public:
 		m_texture = texture;
 		((sf::Sprite*)this)->setTexture(m_texture);
 	}
+	void setWaypoints(std::deque<sf::Vector2f> waypoints)
+	{
+		this->waypoints = waypoints;
+	}
+
+	void hit(float damage)
+	{
+		health -= damage;
+		if (health <= 0)
+		{
+			die();
+		}
+	}
+
+	void die()
+	{
+		waypoints.clear();
+		setPosition(-32, -32);
+	}
 
 	// width should be 22
 	// height should be 16
 	// waypoints last element stores TILE_END or invalid tile / deadend
-	bool setWayPoints(int* tiles)
+	bool calcWaypoints(int* tiles)
 	{
 		waypoints.clear();
 
@@ -81,7 +120,9 @@ public:
 		else
 		{
 			// add starting location to waypoints
-			waypoints.push_back(sf::Vector2f(start.x * 64, start.y * 64 - 32));
+			waypoints.push_back(sf::Vector2f(start.x * 64 + 32, start.y * 64 + 32));
+			// move to starting location
+			setPosition(waypoints.front());
 		}
 
 		// now search for end //
@@ -89,55 +130,68 @@ public:
 		bool success = true;
 		// - find first tile
 		int previous = -1;
+		bool cont = false;
 		if (j + 1 < MAX_LEVEL_WIDTH)
 		{
-			int tileNumber = tiles[i * MAX_LEVEL_WIDTH + j];
+			int tileNumber = tiles[i * MAX_LEVEL_WIDTH + j + 1];
 			if (tileNumber == TILE_HORIZONTAL || tileNumber == TILE_BOTTOMR_CORNER
 				|| tileNumber == TILE_TOPR_CORNER)
 			{
 				j++;
+				cont = false;
+				previous = RIGHT;
+				direction.x = 1;
+				direction.y = 0;
 			}
 			else
 			{
-				std::cout << "No connecting tile to green square" << std::endl;
-				return false;
+				cont = true;
 			}
 		}
-		else if (j - 1 >= 0)
+		if (j - 1 >= 0 && cont)
 		{
-			int tileNumber = tiles[i * MAX_LEVEL_WIDTH + j];
+			int tileNumber = tiles[i * MAX_LEVEL_WIDTH + j - 1];
 			if (tileNumber == TILE_HORIZONTAL || tileNumber == TILE_BOTTOML_CORNER
 				|| tileNumber == TILE_TOPL_CORNER)
 			{
 				j--;
+				cont = false;
+				previous = LEFT;
+				direction.x = -1;
+				direction.y = 0;
 			}
 			else
 			{
-				std::cout << "No connecting tile to green square" << std::endl;
-				return false;
+				cont = true;
 			}
 		}
-		else if (i + 1 < MAX_LEVEL_HEIGHT)
+		if (i + 1 < MAX_LEVEL_HEIGHT && cont)
 		{
-			int tileNumber = tiles[i * MAX_LEVEL_WIDTH + j];
+			int tileNumber = tiles[(i+1) * MAX_LEVEL_WIDTH + j];
 			if (tileNumber == TILE_VERTICAL || tileNumber == TILE_BOTTOMR_CORNER
 				|| tileNumber == TILE_BOTTOML_CORNER)
 			{
 				i++;
+				cont = false;
+				previous = DOWN;
+				direction.x = 0;
+				direction.y = 1;
 			}
 			else
 			{
-				std::cout << "No connecting tile to green square" << std::endl;
-				return false;
+				cont = true;
 			}
 		}
-		else
+		if(cont)
 		{
-			int tileNumber = tiles[i * MAX_LEVEL_WIDTH + j];
+			int tileNumber = tiles[(i-1) * MAX_LEVEL_WIDTH + j];
 			if (tileNumber == TILE_VERTICAL || tileNumber == TILE_TOPR_CORNER
 				|| tileNumber == TILE_TOPL_CORNER)
 			{
 				i--;
+				previous = UP;
+				direction.x = 0;
+				direction.y = -1;
 			}
 			else
 			{
@@ -155,7 +209,7 @@ public:
 			}
 			else
 			{
-				waypoints.push_back(sf::Vector2f(j * 64, i * 64 - 32));
+				waypoints.push_back(sf::Vector2f(j * 64 + 32, i * 64 + 32));
 			}
 
 			switch (tiles[i * MAX_LEVEL_WIDTH + j])
@@ -265,31 +319,100 @@ public:
 				return false;
 			}
 		}
+		waypoints.push_back(sf::Vector2f(j * 64 + 32, i * 64 + 32));
 	}
 
-	int getHealth()
+	float getHealth() const
 	{
 		return health;
 	}
-	int getDamate()
+	float getDamate() const
 	{
 		return damage;
 	}
-	int getSpeed()
+	float getSpeed() const
 	{
 		return speed;
+	}
+	sf::Texture getTexture() const
+	{
+		return m_texture;
+	}
+	std::deque<sf::Vector2f> getWaypoints() const
+	{
+		return waypoints;
+	}
+	sf::Vector2f getDirection() const
+	{
+		return direction;
 	}
 
 	void move()
 	{
-		setPosition(waypoints.front());
-		waypoints.pop_front();
+		if (waypoints.empty())
+		{
+			std::cout << "Waypoints is empty" << std::endl;
+			return;
+		}
+
+		if (getPosition() == waypoints.front())
+		{
+			waypoints.pop_front();
+
+			if (waypoints.empty())
+			{
+
+				std::cout << "Waypoints is empty" << std::endl;
+				return;
+			}
+
+			direction.x = (waypoints.front().x - getPosition().x) / 64;
+			direction.y = (waypoints.front().y - getPosition().y) / 64;
+
+			if (direction.x > 0) setRotation(0);
+			else if (direction.x < 0) setRotation(180);
+			else if (direction.y < 0) setRotation(270);
+			else setRotation(90);
+		}
+		else
+		{
+			// check if past the waypoint, otherwise move
+			if (direction.x > 0 && getPosition().x > waypoints.front().x)
+			{
+				setPosition(waypoints.front());
+			}
+			else if (direction.x < 0 && getPosition().x < waypoints.front().x)
+			{
+				setPosition(waypoints.front());
+			}
+			else if (direction.y > 0 && getPosition().y > waypoints.front().y)
+			{
+				setPosition(waypoints.front());
+			}
+			else if (direction.y < 0 && getPosition().y < waypoints.front().y)
+			{
+				setPosition(waypoints.front());
+			}
+			else
+			{
+				((sf::Sprite*)this)->move(direction.x * speed, direction.y * speed);
+			}
+		}
+	}
+
+	void printWaypoints()
+	{
+		for (int i = 0; i < waypoints.size(); i++)
+		{
+			std::cout << i << ": " << waypoints[i].x << " " << waypoints[i].y << std::endl;
+		}
 	}
 
 private:
-	int health;
-	int damage;
-	int speed;
+	float health;
+	float damage;
+	float speed;
+	sf::Vector2f direction;
 	sf::Texture m_texture;
 	std::deque<sf::Vector2f> waypoints; // final element is either TILE_END or invalid tile / deadend
 };
