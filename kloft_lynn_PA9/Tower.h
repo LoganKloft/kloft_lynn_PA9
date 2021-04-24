@@ -18,7 +18,7 @@ public:
 		shootTimer = 0;
 		rotation = 0;
 		this->setPosition({newPos.x,newPos.y});
-		bulletSprite.setOrigin(32, 32);
+		//bulletSprite.setOrigin(32, 32);
 		towerSprite.setOrigin(32, 32);
 	}
 
@@ -27,7 +27,7 @@ public:
 	float getDamage() { return damage; }
 	float getRange() { return range; }
 	sf::Sprite getTowerSprite() { return towerSprite; }
-	sf::Sprite getBulletSprite() { return bulletSprite; }
+	//sf::Sprite getBulletSprite() { return bulletSprite; }
 	sf::Vector2i getPosition() { return { 32 + 64 * position.x ,32 + 64 * position.y }; }
 	int getRotation() { return rotation; }
 
@@ -35,7 +35,7 @@ public:
 	void setDamage(float nDamage) { damage = nDamage; }
 	void setRange(float nRange) { range = nRange; }
 	void setTowerSprite(sf::Sprite nTowerSprite) { towerSprite = nTowerSprite; }
-	void setBulletSprite(sf::Sprite nBulletSprite) { bulletSprite = nBulletSprite; }
+	//void setBulletSprite(sf::Sprite nBulletSprite) { bulletSprite = nBulletSprite; }
 	void setPosition(sf::Vector2i nPosition) { position = nPosition; towerSprite.setPosition(32 + 64*position.x, 32+64*position.y); }
 	void setRotation(int nRotation) { rotation = nRotation; towerSprite.setRotation(rotation); }
 

@@ -14,6 +14,7 @@
 #include "Button.h"
 #include "Enemy.h"
 #include "Tower.h"
+#include "Sprite.h"
 
 #define WINDOW_WIDTH 1408
 #define WINDOW_HEIGHT 1024
@@ -40,37 +41,14 @@ public:
 		health = 100;
 	}
 
+	~LevelPlayer()
+	{
+		delete [] available;
+	}
+
 	void run(sf::RenderWindow& window)
 	{
 		// Test
-		sf::CircleShape shape(40);
-
-
-
-
-		std::vector<base_tower*> towers;
-
-		towers.push_back(new hedgehog);
-			
-		towers.back()->setPosition({ 0,0 });
-
-		towers.push_back(new bunny);
-		towers.back()->setPosition({ 1,0 });
-
-		towers.push_back(new raccoon);
-		towers.back()->setPosition({ 2,0 });
-
-		towers.push_back(new skunk);
-		towers.back()->setPosition({ 3,0 });
-
-		towers.push_back(new chipmunk);
-		towers.back()->setPosition({ 4,0 });
-
-
-
-
-
-
 
 		// Load map
 		std::string map_name = selectLevel(window);
@@ -81,7 +59,9 @@ public:
 		{
 			std::cout << "Failed to load map in LevelPlayer object" << std::endl;
 		}
-		
+		map_tiles = map.getTiles();
+		setAvailable(&available, map_tiles);
+
 		// Load Enemy textures
 		sf::Texture tank_texture;
 		if(!tank_texture.loadFromFile("tank.png"))
@@ -89,7 +69,7 @@ public:
 			std::cout << "Failed to load tank texture" << std::endl;
 		}
 
-		// Generate Tower Buttons
+		// Generate Tower Buttons and Temporary Sprites
 		Button towerMenuButton(sf::Vector2f(32, 64),
 			sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), "vertical_3lines.png");
 
@@ -100,6 +80,18 @@ public:
 			Button(sf::Vector2f(128,128), sf::Vector2f(0,408), "chipmunk.png"),
 			Button(sf::Vector2f(128,128), sf::Vector2f(0,612), "hedgehog.png"),
 			Button(sf::Vector2f(128,128), sf::Vector2f(0,816), "raccoon.png") };
+
+		bunny Bunny({ 0,0 });
+		skunk Skunk({ 0,0 });
+		chipmunk Chipmunk({ 0,0 });
+		hedgehog Hedgehog({ 0,0 });
+		raccoon Raccoon({ 0,0 });
+
+		/*Sprite BunnySprite("sprites/bunny.png", { 0, 0 });
+		Sprite SkunkSprite("sprites/skunk.png", { 0, 0 });
+		Sprite ChipmunkSprite("sprites/chipmunk.png", { 0, 0 });
+		Sprite HedgehogSprite("sprites/hedgehog.png", { 0, 0 });
+		Sprite RaccoonSprite("sprites/raccoon.png", { 0, 0 });*/
 		
 		// Generate Play/Pause Buttons
 		Button startWaveButton(sf::Vector2f(128, 128), sf::Vector2f(window.getSize().x - 128, window.getSize().y - 128), "play_button.png");
@@ -114,6 +106,9 @@ public:
 		sf::Text health_text(std::to_string(health), font, 50);
 		gold_text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, 0));
 		health_text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, 50));
+
+		// Stores towers
+		std::vector<base_tower*> towers;
 
 		// Create wave
 		std::vector<std::vector<int>> waves;
@@ -184,6 +179,61 @@ public:
 								}
 							}
 						}
+						if (BunnySelected &&!towerButtons[BUNNY].contains(event.mouseButton.x, event.mouseButton.y) && Bunny.getPrice() <= gold)
+						{
+							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
+							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
+							{
+								BunnySelected = false;
+								available[y * MAX_LEVEL_WIDTH + x] = 0;
+								gold -= Bunny.getPrice();
+								towers.push_back(new bunny({ x, y }));
+							}
+						}
+						else if (SkunkSelected && !towerButtons[SKUNK].contains(event.mouseButton.x, event.mouseButton.y) && Skunk.getPrice() <= gold)
+						{
+							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
+							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
+							{
+								SkunkSelected = false;
+								available[y * MAX_LEVEL_WIDTH + x] = 0;
+								gold -= Skunk.getPrice();
+								towers.push_back(new skunk({ x, y }));
+							}
+						}
+						else if (ChipmunkSelected && !towerButtons[CHIPMUNK].contains(event.mouseButton.x, event.mouseButton.y) && Chipmunk.getPrice() <= gold)
+						{
+							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
+							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
+							{
+								ChipmunkSelected = false;
+								available[y * MAX_LEVEL_WIDTH + x] = 0;
+								gold -= Chipmunk.getPrice();
+								towers.push_back(new chipmunk({ x, y }));
+							}
+						}
+						else if (HedgehogSelected && !towerButtons[HEDGEHOG].contains(event.mouseButton.x, event.mouseButton.y) && Hedgehog.getPrice() <= gold)
+						{
+							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
+							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
+							{
+								HedgehogSelected = false;
+								available[y * MAX_LEVEL_WIDTH + x] = 0;
+								gold -= Hedgehog.getPrice();
+								towers.push_back(new hedgehog({ x, y }));
+							}
+						}
+						else if (RaccoonSelected && !towerButtons[RACCOON].contains(event.mouseButton.x, event.mouseButton.y) && Raccoon.getPrice() <= gold)
+						{
+							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
+							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
+							{
+								RaccoonSelected = false;
+								available[y * MAX_LEVEL_WIDTH + x] = 0;
+								gold -= Raccoon.getPrice();
+								towers.push_back(new raccoon({ x, y }));
+							}
+						}
 						if (towerMenuButton.contains(event.mouseButton.x, event.mouseButton.y)) TowerMenuActive = !TowerMenuActive;
 						if (startWaveButton.contains(event.mouseButton.x, event.mouseButton.y)) StartNextWave = !StartNextWave;
 					}
@@ -203,12 +253,11 @@ public:
 
 			for (int i = 0; i < enemiesCurrentSize; i++)
 			{
-				if (!enemies[i].isDead())
-				{
-					health -= enemies[i].move();
-					health_text.setString(std::to_string(health));
-				}
+				health -= enemies[i].move();
+				health_text.setString(std::to_string(health));
 			}
+
+			gold_text.setString(std::to_string(gold));
 
 			window.clear();
 			window.draw(map);
@@ -219,8 +268,6 @@ public:
 				towers[i]->renderTower(window);
 			}
 
-			
-			
 			window.draw(gold_text);
 			window.draw(health_text);
 			window.draw(towerMenuButton);
@@ -236,30 +283,33 @@ public:
 
 			if (BunnySelected)
 			{
-				shape.setPosition(sf::Mouse::getPosition(window).x - 32, sf::Mouse::getPosition(window).y - 32);
-				window.draw(shape);
+				Bunny.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				Bunny.renderTower(window);
 			}
 			else if (SkunkSelected)
 			{
-
+				Skunk.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				Skunk.renderTower(window);
 			}
 			else if (ChipmunkSelected)
 			{
-
+				Chipmunk.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				Chipmunk.renderTower(window);
 			}
 			else if (HedgehogSelected)
 			{
-
+				Hedgehog.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				Hedgehog.renderTower(window);
 			}
 			else if (RaccoonSelected)
 			{
-
+				Raccoon.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				Raccoon.renderTower(window);
 			}
 			for (int i = 0; i < enemiesCurrentSize; i++)
 			{
 				window.draw(enemies[i]);
 			}
-
 
 			window.display();
 		}
@@ -267,6 +317,8 @@ public:
 private:
 	int gold;
 	int health;
+	int* map_tiles;
+	int* available; // if = 1 can place towe
 
 	// Tower Menu
 	bool TowerMenuActive;
@@ -283,6 +335,16 @@ private:
 
 	// Misc
 	bool Pause;
+
+	void setAvailable(int** available, int* tiles)
+	{
+		*available = new int[MAX_LEVEL_HEIGHT * MAX_LEVEL_WIDTH];
+		for (int i = 0; i < MAX_LEVEL_HEIGHT * MAX_LEVEL_WIDTH; i++)
+		{
+			if (tiles[i] == TILE_GRASS) (*available)[i] = 1;
+			else (*available)[i] = 0;
+		}
+	}
 
 	std::string selectLevel(sf::RenderWindow& window)
 	{
