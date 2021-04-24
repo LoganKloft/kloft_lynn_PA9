@@ -21,6 +21,7 @@
 int main(void)
 {
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Habitation Defense - Lynn/Kloft", sf::Style::Close);
+	window.setFramerateLimit(60);
 	LevelEditor lEditor;
 	LevelPlayer lPlayer;
 

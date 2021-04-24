@@ -150,9 +150,18 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="LevelPlayer.h" />
+    <ClInclude Include="Tower.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="roads2W.png" />
+    <Image Include="sprites\bunny.png" />
+    <Image Include="sprites\chipmunk.png" />
+    <Image Include="sprites\easy_enemy.png" />
+    <Image Include="sprites\hard_enemy.png" />
+    <Image Include="sprites\hedgehog.png" />
+    <Image Include="sprites\medium_enemy.png" />
+    <Image Include="sprites\raccoon.png" />
+    <Image Include="sprites\skunk.png" />
     <Image Include="tileSet_1.png" />
   </ItemGroup>
   <ItemGroup>

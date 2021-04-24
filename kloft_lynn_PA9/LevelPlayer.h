@@ -221,6 +221,16 @@ public:
 			{
 				window.draw(enemies[i]);
 			}
+
+			test.targetEnemy(enemies);
+
+			for (int i = 0; i < towers.size(); i++)
+			{
+				towers[i].targetEnemy(enemies);
+				towers[i].renderTower(window);
+			}
+
+
 			window.display();
 		}
 	}
