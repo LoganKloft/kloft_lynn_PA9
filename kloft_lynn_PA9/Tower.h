@@ -13,16 +13,14 @@ class base_tower
 {
 public:
 	//Constructor
-	base_tower() 
+	base_tower(sf::Vector2i newPos) 
 	{
+		shootTimer = 0;
 		rotation = 0;
-		this->setPosition({0,0});
+		this->setPosition({newPos.x,newPos.y});
 		bulletSprite.setOrigin(32, 32);
 		towerSprite.setOrigin(32, 32);
 	}
-
-	//Destructor
-	~base_tower() {}
 
 	//Getters and Setters
 	int getPrice() { return sellPrice; }
@@ -64,6 +62,17 @@ public:
 
 	void renderTower(sf::RenderWindow& cWindow) { cWindow.draw(towerSprite); };
 
+	void shootCheck()
+	{
+		if (shootTimer == 0)
+		{
+			shootTimer = shootSpeed;
+			shoot();
+		}
+		else
+			shootTimer--;
+	}
+
 	//Abstract
 	virtual void shoot() = 0;
 
@@ -72,24 +81,25 @@ protected:
 	float damage;
 	float range;
 	int shootSpeed;
+	int shootTimer;
 
 	sf::Vector2i position;
 	int rotation;
 
 	sf::Sprite towerSprite;
-	sf::Sprite bulletSprite;
+	sf::Texture bulletTexture;
 	sf::Texture towerTexture;
 };
 
 class hedgehog : public base_tower
 {
 public:
-	hedgehog()
+	hedgehog(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
 		damage = 10;
 		range = 1000;
-
+		shootSpeed = 60;
 		
 		if (!towerTexture.loadFromFile("sprites/hedgehog.png"))
 		{
@@ -102,19 +112,19 @@ public:
 
 	void shoot()
 	{
-		std::cout << "pew pew" << std::endl;
+		std::cout << "Hedgehog Blast" << std::endl;
 	}
 };
 
 class bunny : public base_tower
 {
 public:
-	bunny()
+	bunny(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
 		damage = 10;
 		range = 1000;
-
+		shootSpeed = 30;
 
 		if (!towerTexture.loadFromFile("sprites/bunny.png"))
 		{
@@ -127,19 +137,19 @@ public:
 
 	void shoot()
 	{
-		std::cout << "pew pew" << std::endl;
+		std::cout << "Bunny Stunny" << std::endl;
 	}
 };
 
 class raccoon : public base_tower
 {
 public:
-	raccoon()
+	raccoon(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
 		damage = 10;
 		range = 1000;
-
+		shootSpeed = 40;
 
 		if (!towerTexture.loadFromFile("sprites/raccoon.png"))
 		{
@@ -151,19 +161,19 @@ public:
 
 	void shoot()
 	{
-		std::cout << "pew pew" << std::endl;
+		std::cout << "Raccoon Scratchy" << std::endl;
 	}
 };
 
 class skunk : public base_tower
 {
 public:
-	skunk()
+	skunk(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
 		damage = 10;
 		range = 1000;
-
+		shootSpeed = 120;
 
 		if (!towerTexture.loadFromFile("sprites/skunk.png"))
 		{
@@ -175,19 +185,19 @@ public:
 
 	void shoot()
 	{
-		std::cout << "pew pew" << std::endl;
+		std::cout << "Skunk Spray" << std::endl;
 	}
 };
 
 class chipmunk : public base_tower
 {
 public:
-	chipmunk()
+	chipmunk(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
 		damage = 10;
 		range = 1000;
-
+		shootSpeed = 12;
 
 		if (!towerTexture.loadFromFile("sprites/chipmunk.png"))
 		{
@@ -200,7 +210,7 @@ public:
 
 	void shoot()
 	{
-		std::cout << "pew pew" << std::endl;
+		std::cout << "Nut Throw" << std::endl;
 	}
 };
 
