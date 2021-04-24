@@ -14,6 +14,8 @@
 #include "Button.h"
 #include "Enemy.h"
 
+#include "Tower.h"
+
 class LevelPlayer
 {
 public:
@@ -30,12 +32,46 @@ public:
 		{
 			std::cout << "Failed to load tank texture" << std::endl;
 		}
+
+		sf::Texture hedgehog;
+		if (!hedgehog.loadFromFile("sprites/hedgehog.png"))
+		{
+			std::cout << "Failed to load hedgehog texture" << std::endl;
+		}
+
 		std::vector<Enemy> enemies;
+
+		std::vector<base_tower> towers;
+
+
+		sf::Sprite tower_sprite;
+		tower_sprite.setTexture(hedgehog, true);
+
+		
+		base_tower test(1000, 1000, 300, tower_sprite, tower_sprite);
+		test.setPosition({ 8,6 });
+
+		towers.push_back(test);
+
+		test.setPosition({ 4, 5 });
+
+		towers.push_back(test);
+
+		test.setPosition({ 7, 12 });
+
+		towers.push_back(test);
+
+		test.setPosition({ 12, 6 });
+
+		towers.push_back(test);
+
+
+		
 
 		int size = 0;
 		for (int i = 0; i < 20; i++)
 		{
-			Enemy tank(tank_texture, 5, 5, .05);
+			Enemy tank(tank_texture, 5, 5, 5);
 			tank.calcWaypoints(map.getTiles());
 			enemies.push_back(tank);
 		}
@@ -72,6 +108,16 @@ public:
 			{
 				window.draw(enemies[i]);
 			}
+
+			test.targetEnemy(enemies);
+
+			for (int i = 0; i < towers.size(); i++)
+			{
+				towers[i].targetEnemy(enemies);
+				towers[i].renderTower(window);
+			}
+
+
 			window.display();
 		}
 	}
