@@ -388,10 +388,10 @@ public:
 			direction.x = (waypoints.front().x - getPosition().x) / 64;
 			direction.y = (waypoints.front().y - getPosition().y) / 64;
 
-			if (direction.x > 0) setRotation(0);
-			else if (direction.x < 0) setRotation(180);
-			else if (direction.y < 0) setRotation(270);
-			else setRotation(90);
+			if (direction.x > 0) setRotation(90);
+			else if (direction.x < 0) setRotation(270);
+			else if (direction.y < 0) setRotation(0);
+			else setRotation(180);
 		}
 		else
 		{

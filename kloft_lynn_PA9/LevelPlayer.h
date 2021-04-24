@@ -63,10 +63,20 @@ public:
 		setAvailable(&available, map_tiles);
 
 		// Load Enemy textures
-		sf::Texture tank_texture;
-		if(!tank_texture.loadFromFile("tank.png"))
+		sf::Texture easyEnemyTexture;
+		if(!easyEnemyTexture.loadFromFile("sprites/easy_enemy.png"))
 		{
-			std::cout << "Failed to load tank texture" << std::endl;
+			std::cout << "Failed to load easy enemy texture" << std::endl;
+		}
+		sf::Texture mediumEnemyTexture;
+		if (!mediumEnemyTexture.loadFromFile("sprites/medium_enemy.png"))
+		{
+			std::cout << "Failed to load medium enemy texture" << std::endl;
+		}
+		sf::Texture hardEnemyTexture;
+		if (!hardEnemyTexture.loadFromFile("sprites/hard_enemy.png"))
+		{
+			std::cout << "Failed to load hard enemy texture" << std::endl;
 		}
 
 		// Generate Tower Buttons and Temporary Sprites
@@ -75,11 +85,11 @@ public:
 
 		int towersSize = 5;
 		Button towerButtons[5] = {
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,0), "bunny.png"),
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,204), "skunk.png"),
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,408), "chipmunk.png"),
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,612), "hedgehog.png"),
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,816), "raccoon.png") };
+			Button(sf::Vector2f(128,128), sf::Vector2f(0,0), "sprites/bunny.png"),
+			Button(sf::Vector2f(128,128), sf::Vector2f(0,204), "sprites/skunk.png"),
+			Button(sf::Vector2f(128,128), sf::Vector2f(0,408), "sprites/chipmunk.png"),
+			Button(sf::Vector2f(128,128), sf::Vector2f(0,612), "sprites/hedgehog.png"),
+			Button(sf::Vector2f(128,128), sf::Vector2f(0,816), "sprites/raccoon.png") };
 
 		bunny Bunny({ 0,0 });
 		skunk Skunk({ 0,0 });
@@ -112,24 +122,28 @@ public:
 
 		// Create wave
 		std::vector<std::vector<int>> waves;
-		waves.push_back({ 20, 0, 0 });
+		waves.push_back({ 5, 5, 5 });
 
 		int enemiesCurrentSize = 0;
-		int enemiesMaxSize = waves[0][0] + waves[0][1] + waves[0][2];
+		int enemiesTotalSize = waves[0][0] + waves[0][1] + waves[0][2];
 		std::vector<Enemy> enemies;
 		for (int i = 0; i < waves[0][0]; i++) // easy enemies
 		{
-			Enemy tank(tank_texture, 5, 5, 1, 5);
-			tank.calcWaypoints(map.getTiles());
-			enemies.push_back(tank);
+			Enemy easy(easyEnemyTexture, 5, 5, 1, 5);
+			easy.calcWaypoints(map.getTiles());
+			enemies.push_back(easy);
 		}
 		for (int i = 0; i < waves[0][1]; i++) // medium enemies
 		{
-
+			Enemy medium(mediumEnemyTexture, 5, 5, 1, 5);
+			medium.calcWaypoints(map.getTiles());
+			enemies.push_back(medium);
 		}
 		for (int i = 0; i < waves[0][2]; i++) // hard enemies
 		{
-
+			Enemy hard(hardEnemyTexture, 5, 5, 1, 5);
+			hard.calcWaypoints(map.getTiles());
+			enemies.push_back(hard);
 		}
 
 		sf::Clock clock;
@@ -245,7 +259,7 @@ public:
 				WaveInProgress = true;
 			}
 
-			if (enemiesCurrentSize < 20 && clock.getElapsedTime().asSeconds() >= 1 && WaveInProgress)
+			if (enemiesCurrentSize < enemiesTotalSize && clock.getElapsedTime().asSeconds() >= 1 && WaveInProgress)
 			{
 				enemiesCurrentSize++;
 				clock.restart();
