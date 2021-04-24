@@ -20,7 +20,7 @@
 */
 int main(void)
 {
-	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tower Defense", sf::Style::Close);
+	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Habitation Defense - Lynn/Kloft", sf::Style::Close);
 	LevelEditor lEditor;
 	LevelPlayer lPlayer;
 

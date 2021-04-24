@@ -29,6 +29,7 @@ public:
 	Enemy(const sf::Texture& texture, float health, float damage, float speed) : sf::Sprite(texture)
 	{
 		setOrigin(32, 32);
+		this->dead = false;
 		this->health = health;
 		this->damage = damage;
 		this->speed = speed;
@@ -37,6 +38,7 @@ public:
 
 	Enemy(const Enemy& copy)
 	{
+		this->dead = copy.isDead();
 		this->health = copy.getHealth();
 		this->damage = copy.getDamate();
 		this->speed = copy.getSpeed();
@@ -82,6 +84,7 @@ public:
 	{
 		waypoints.clear();
 		setPosition(-32, -32);
+		dead = true;
 	}
 
 	// width should be 22
@@ -334,6 +337,10 @@ public:
 	{
 		return speed;
 	}
+	bool isDead() const
+	{
+		return dead;
+	}
 	sf::Texture getTexture() const
 	{
 		return m_texture;
@@ -352,6 +359,7 @@ public:
 		if (waypoints.empty())
 		{
 			std::cout << "Waypoints is empty" << std::endl;
+			die();
 			return;
 		}
 
@@ -363,6 +371,7 @@ public:
 			{
 
 				std::cout << "Waypoints is empty" << std::endl;
+				die();
 				return;
 			}
 
@@ -409,6 +418,7 @@ public:
 	}
 
 private:
+	bool dead;
 	float health;
 	float damage;
 	float speed;

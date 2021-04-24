@@ -63,7 +63,8 @@ public:
 
 			for (int i = 0; i < size; i++)
 			{
-				enemies[i].move();
+				if(!enemies[i].isDead())
+					enemies[i].move();
 			}
 			window.clear();
 			window.draw(map);
