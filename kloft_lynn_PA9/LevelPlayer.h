@@ -13,6 +13,7 @@
 #include "Level.h"
 #include "Button.h"
 #include "Enemy.h"
+#include "Tower.h"
 
 #define WINDOW_WIDTH 1408
 #define WINDOW_HEIGHT 1024
@@ -44,6 +45,33 @@ public:
 		// Test
 		sf::CircleShape shape(40);
 
+
+
+
+		std::vector<base_tower*> towers;
+
+		towers.push_back(new hedgehog);
+			
+		towers.back()->setPosition({ 0,0 });
+
+		towers.push_back(new bunny);
+		towers.back()->setPosition({ 1,0 });
+
+		towers.push_back(new raccoon);
+		towers.back()->setPosition({ 2,0 });
+
+		towers.push_back(new skunk);
+		towers.back()->setPosition({ 3,0 });
+
+		towers.push_back(new chipmunk);
+		towers.back()->setPosition({ 4,0 });
+
+
+
+
+
+
+
 		// Load map
 		std::string map_name = selectLevel(window);
 		if (map_name == "exit") return;
@@ -66,7 +94,7 @@ public:
 			sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), "vertical_3lines.png");
 
 		int towersSize = 5;
-		Button towers[5] = { 
+		Button towerButtons[5] = {
 			Button(sf::Vector2f(128,128), sf::Vector2f(0,0), "bunny.png"),
 			Button(sf::Vector2f(128,128), sf::Vector2f(0,204), "skunk.png"),
 			Button(sf::Vector2f(128,128), sf::Vector2f(0,408), "chipmunk.png"),
@@ -96,7 +124,7 @@ public:
 		std::vector<Enemy> enemies;
 		for (int i = 0; i < waves[0][0]; i++) // easy enemies
 		{
-			Enemy tank(tank_texture, 5, 5, .05, 5);
+			Enemy tank(tank_texture, 5, 5, 1, 5);
 			tank.calcWaypoints(map.getTiles());
 			enemies.push_back(tank);
 		}
@@ -128,7 +156,7 @@ public:
 						{
 							for (int i = 0; i < towersSize; i++)
 							{
-								if (towers[i].contains(event.mouseButton.x, event.mouseButton.y))
+								if (towerButtons[i].contains(event.mouseButton.x, event.mouseButton.y))
 								{
 									switch (i)
 									{
@@ -184,15 +212,25 @@ public:
 
 			window.clear();
 			window.draw(map);
+
+			for (int i = 0; i < towers.size(); i++)
+			{
+				towers[i]->targetEnemy(enemies);
+				towers[i]->renderTower(window);
+			}
+
+			
+			
 			window.draw(gold_text);
 			window.draw(health_text);
 			window.draw(towerMenuButton);
 			window.draw(startWaveButton);
+
 			if (TowerMenuActive)
 			{
 				for (int i = 0; i < towersSize; i++)
 				{
-					window.draw(towers[i]);
+					window.draw(towerButtons[i]);
 				}
 			}
 
@@ -220,14 +258,6 @@ public:
 			for (int i = 0; i < enemiesCurrentSize; i++)
 			{
 				window.draw(enemies[i]);
-			}
-
-			test.targetEnemy(enemies);
-
-			for (int i = 0; i < towers.size(); i++)
-			{
-				towers[i].targetEnemy(enemies);
-				towers[i].renderTower(window);
 			}
 
 

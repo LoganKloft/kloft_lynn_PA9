@@ -179,7 +179,7 @@ public:
 		}
 		if (i + 1 < MAX_LEVEL_HEIGHT && cont)
 		{
-			int tileNumber = tiles[(i+1) * MAX_LEVEL_WIDTH + j];
+			int tileNumber = tiles[(i + 1) * MAX_LEVEL_WIDTH + j];
 			if (tileNumber == TILE_VERTICAL || tileNumber == TILE_BOTTOMR_CORNER
 				|| tileNumber == TILE_BOTTOML_CORNER)
 			{
@@ -194,9 +194,9 @@ public:
 				cont = true;
 			}
 		}
-		if(cont)
+		if (cont)
 		{
-			int tileNumber = tiles[(i-1) * MAX_LEVEL_WIDTH + j];
+			int tileNumber = tiles[(i - 1) * MAX_LEVEL_WIDTH + j];
 			if (tileNumber == TILE_VERTICAL || tileNumber == TILE_TOPR_CORNER
 				|| tileNumber == TILE_TOPL_CORNER)
 			{
@@ -232,7 +232,7 @@ public:
 					j--;
 					previous = LEFT;
 				}
-				else if(previous == RIGHT)
+				else if (previous == RIGHT)
 				{
 					j++;
 					previous = RIGHT;

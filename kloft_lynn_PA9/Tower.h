@@ -13,14 +13,8 @@ class base_tower
 {
 public:
 	//Constructor
-	base_tower(int nSellPrice, float nDamage, float nRange, sf::Sprite nTowerSprite, sf::Sprite nBulletSprite) 
+	base_tower() 
 	{
-		sellPrice = nSellPrice;
-		damage = nDamage;
-		range = nRange;
-		towerSprite = nTowerSprite;
-		bulletSprite = nBulletSprite;
-
 		rotation = 0;
 		this->setPosition({0,0});
 		bulletSprite.setOrigin(32, 32);
@@ -47,6 +41,7 @@ public:
 	void setPosition(sf::Vector2i nPosition) { position = nPosition; towerSprite.setPosition(32 + 64*position.x, 32+64*position.y); }
 	void setRotation(int nRotation) { rotation = nRotation; towerSprite.setRotation(rotation); }
 
+	//main methods
 	void targetEnemy(std::vector<Enemy>& enemies) 
 	{
 		for (int i = 0; i < enemies.size(); i++)
@@ -69,16 +64,144 @@ public:
 
 	void renderTower(sf::RenderWindow& cWindow) { cWindow.draw(towerSprite); };
 
+	//Abstract
+	virtual void shoot() = 0;
+
 protected:
 	int sellPrice;
 	float damage;
 	float range;
+	int shootSpeed;
 
 	sf::Vector2i position;
 	int rotation;
 
 	sf::Sprite towerSprite;
 	sf::Sprite bulletSprite;
+	sf::Texture towerTexture;
+};
+
+class hedgehog : public base_tower
+{
+public:
+	hedgehog()
+	{
+		sellPrice = 100;
+		damage = 10;
+		range = 1000;
+
+		
+		if (!towerTexture.loadFromFile("sprites/hedgehog.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		towerSprite.setTexture(towerTexture, true);
+	}
+
+
+	void shoot()
+	{
+		std::cout << "pew pew" << std::endl;
+	}
+};
+
+class bunny : public base_tower
+{
+public:
+	bunny()
+	{
+		sellPrice = 100;
+		damage = 10;
+		range = 1000;
+
+
+		if (!towerTexture.loadFromFile("sprites/bunny.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		towerSprite.setTexture(towerTexture, true);
+	}
+
+
+	void shoot()
+	{
+		std::cout << "pew pew" << std::endl;
+	}
+};
+
+class raccoon : public base_tower
+{
+public:
+	raccoon()
+	{
+		sellPrice = 100;
+		damage = 10;
+		range = 1000;
+
+
+		if (!towerTexture.loadFromFile("sprites/raccoon.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		towerSprite.setTexture(towerTexture, true);
+	}
+
+	void shoot()
+	{
+		std::cout << "pew pew" << std::endl;
+	}
+};
+
+class skunk : public base_tower
+{
+public:
+	skunk()
+	{
+		sellPrice = 100;
+		damage = 10;
+		range = 1000;
+
+
+		if (!towerTexture.loadFromFile("sprites/skunk.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		towerSprite.setTexture(towerTexture, true);
+	}
+
+	void shoot()
+	{
+		std::cout << "pew pew" << std::endl;
+	}
+};
+
+class chipmunk : public base_tower
+{
+public:
+	chipmunk()
+	{
+		sellPrice = 100;
+		damage = 10;
+		range = 1000;
+
+
+		if (!towerTexture.loadFromFile("sprites/chipmunk.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		towerSprite.setTexture(towerTexture, true);
+	}
+
+
+	void shoot()
+	{
+		std::cout << "pew pew" << std::endl;
+	}
 };
 
 /*Methods:
