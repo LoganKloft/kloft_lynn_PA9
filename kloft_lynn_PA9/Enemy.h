@@ -26,13 +26,14 @@ public:
 		speed = 0;
 	}
 
-	Enemy(const sf::Texture& texture, float health, float damage, float speed) : sf::Sprite(texture)
+	Enemy(const sf::Texture& texture, int health, float damage, float speed, int gold) : sf::Sprite(texture)
 	{
 		setOrigin(32, 32);
 		this->dead = false;
 		this->health = health;
 		this->damage = damage;
 		this->speed = speed;
+		this->gold = gold;
 		m_texture = texture;
 	}
 
@@ -66,25 +67,33 @@ public:
 		m_texture = texture;
 		((sf::Sprite*)this)->setTexture(m_texture);
 	}
+	void setGold(float gold)
+	{
+		this->gold = gold;
+	}
 	void setWaypoints(std::deque<sf::Vector2f> waypoints)
 	{
 		this->waypoints = waypoints;
 	}
 
-	void hit(float damage)
+	// returns gold value of enemy if dead, 0 otherwise
+	int hit(float damage)
 	{
 		health -= damage;
 		if (health <= 0)
 		{
-			die();
+			return die();
 		}
+		return 0;
 	}
 
-	void die()
+	// removes enemy from the screen and returns gold value of enemy
+	int die()
 	{
 		waypoints.clear();
 		setPosition(-32, -32);
 		dead = true;
+		return gold;
 	}
 
 	// width should be 22
@@ -325,7 +334,7 @@ public:
 		waypoints.push_back(sf::Vector2f(j * 64 + 32, i * 64 + 32));
 	}
 
-	float getHealth() const
+	int getHealth() const
 	{
 		return health;
 	}
@@ -337,9 +346,17 @@ public:
 	{
 		return speed;
 	}
+	int getGold() const
+	{
+		return gold;
+	}
 	bool isDead() const
 	{
 		return dead;
+	}
+	bool isWaypointsEmpty() const
+	{
+		return waypoints.empty();
 	}
 	sf::Texture getTexture() const
 	{
@@ -354,13 +371,13 @@ public:
 		return direction;
 	}
 
-	void move()
+	int move()
 	{
 		if (waypoints.empty())
 		{
 			std::cout << "Waypoints is empty" << std::endl;
 			die();
-			return;
+			return damage;
 		}
 
 		if (getPosition() == waypoints.front())
@@ -372,7 +389,7 @@ public:
 
 				std::cout << "Waypoints is empty" << std::endl;
 				die();
-				return;
+				return damage;
 			}
 
 			direction.x = (waypoints.front().x - getPosition().x) / 64;
@@ -407,6 +424,7 @@ public:
 				((sf::Sprite*)this)->move(direction.x * speed, direction.y * speed);
 			}
 		}
+		return 0;
 	}
 
 	void printWaypoints()
@@ -419,9 +437,10 @@ public:
 
 private:
 	bool dead;
-	float health;
+	int health;
 	float damage;
 	float speed;
+	int gold;
 	sf::Vector2f direction;
 	sf::Texture m_texture;
 	std::deque<sf::Vector2f> waypoints; // final element is either TILE_END or invalid tile / deadend

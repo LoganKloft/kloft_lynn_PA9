@@ -22,76 +22,6 @@ struct TileContainer
 class LevelEditor
 {
 public:
-	std::string selectLevel(sf::RenderWindow& window)
-	{
-		level_list.clear();
-		std::ifstream infile("level_list.txt");
-		std::string lvl = "", str = "";
-		while (std::getline(infile, lvl, ','))
-		{
-			level_list.push_back(lvl);
-			std::cout << lvl << std::endl;
-		}
-
-		infile.close();
-
-		std::vector<sf::Text> levelListText;
-		sf::Font font;
-		font.loadFromFile("Arialic Hollow.ttf");
-		for (int i = 0; i < level_list.size(); i++)
-		{
-			sf::Text tmp(level_list[i], font, 50);
-			tmp.move(WINDOW_WIDTH / 3 - 100, WINDOW_HEIGHT / 2 - 100);
-			levelListText.push_back(tmp);
-		}
-
-		sf::Event event;
-		bool flag = true;
-		int i = 0;
-		sf::Text next("next", font, 50);
-		next.move(2*(WINDOW_WIDTH / 3), WINDOW_HEIGHT / 2 - 100);
-		while (flag)
-		{
-			while (window.pollEvent(event))
-			{
-				switch (event.type)
-				{
-				case sf::Event::Closed:
-					window.close();
-					break;
-				case sf::Event::MouseButtonReleased:
-					if (event.mouseButton.button == sf::Mouse::Left && event.mouseButton.x < WINDOW_WIDTH / 2)
-					{
-						// select level
-						str = level_list[i];
-						if (str == "new") str = "";
-						flag = false;
-					}
-					else if(i == levelListText.size() - 1)
-					{
-						// wrap around to beginning
-						i = 0;
-					}
-					else
-					{
-						// cycle to next level
-						i++;
-					}
-					break;
-
-				default:
-					break;
-				}
-			}
-			window.clear();
-			window.draw(levelListText[i]);
-			window.draw(next);
-			window.display();
-		}
-
-		return str;
-	}
-
 	bool edit(sf::RenderWindow& window)
 	{
 		// default font for sf::Text objects
@@ -108,6 +38,7 @@ public:
 
 		// select to create a new level or edit an existing one
 		std::string levelFile = selectLevel(window);
+		if (levelFile == "exit") return true;
 		if (!map.load("tileSet_1.png", sf::Vector2u(64, 64), levelFile, 22, 16))
 		{
 			std::cout << "Failed to load level in LevelEditor" << std::endl;
@@ -284,5 +215,83 @@ private:
 				tileNumber++;
 			}
 		}
+	}
+
+	std::string selectLevel(sf::RenderWindow& window)
+	{
+		level_list.clear();
+		level_list.push_back("new");
+		std::ifstream infile("level_list.txt");
+		std::string lvl = "", str = "";
+		while (std::getline(infile, lvl, ','))
+		{
+			level_list.push_back(lvl);
+			std::cout << lvl << std::endl;
+		}
+
+		infile.close();
+
+		std::vector<sf::Text> levelListText;
+		sf::Font font;
+		font.loadFromFile("Arialic Hollow.ttf");
+		for (int i = 0; i < level_list.size(); i++)
+		{
+			sf::Text tmp(level_list[i], font, 50);
+			tmp.move(WINDOW_WIDTH / 3 - 100, WINDOW_HEIGHT / 2 - 100);
+			levelListText.push_back(tmp);
+		}
+
+		Button exit_button(sf::Vector2f(64, 64), sf::Vector2f(0, 0), "x_mark.png");
+		sf::Event event;
+		bool flag = true;
+		int i = 0;
+		sf::Text next("next", font, 50);
+		next.move(2 * (WINDOW_WIDTH / 3), WINDOW_HEIGHT / 2 - 100);
+		while (flag)
+		{
+			while (window.pollEvent(event))
+			{
+				switch (event.type)
+				{
+				case sf::Event::Closed:
+					window.close();
+					break;
+				case sf::Event::MouseButtonReleased:
+					if (exit_button.contains(event.mouseButton.x, event.mouseButton.y))
+					{
+						// exit
+						return "exit";
+					}
+					else if (event.mouseButton.x < WINDOW_WIDTH / 2)
+					{
+						// select level
+						str = level_list[i];
+						if (str == "new") str = "";
+						flag = false;
+					}
+					else if (i == levelListText.size() - 1)
+					{
+						// wrap around to beginning
+						i = 0;
+					}
+					else
+					{
+						// cycle to next level
+						i++;
+					}
+					break;
+
+				default:
+					break;
+				}
+			}
+			window.clear();
+			window.draw(levelListText[i]);
+			window.draw(next);
+			window.draw(exit_button);
+			window.display();
+		}
+
+		return str;
 	}
 };
