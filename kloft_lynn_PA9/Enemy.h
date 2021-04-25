@@ -36,7 +36,7 @@ public:
 		m_texture = texture;
 	}
 
-	Enemy(const Enemy& copy)
+	/*Enemy(const Enemy& copy) - this bad boy is not done correctly :>
 	{
 		this->health = copy.getHealth();
 		this->damage = copy.getDamate();
@@ -46,7 +46,7 @@ public:
 		this->setTexture(m_texture);
 		this->setOrigin(copy.getOrigin());
 		this->setPosition(copy.getPosition());
-	}
+	}*/
 
 	void setHealth(float health)
 	{
@@ -369,7 +369,6 @@ public:
 		if (waypoints.empty())
 		{
 			std::cout << "Waypoints is empty" << std::endl;
-			die();
 			return damage;
 		}
 
@@ -381,7 +380,6 @@ public:
 			{
 
 				std::cout << "Waypoints is empty" << std::endl;
-				die();
 				return damage;
 			}
 

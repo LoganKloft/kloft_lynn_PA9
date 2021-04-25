@@ -33,9 +33,23 @@ public:
 			HedgehogSelected = RaccoonSelected = Pause = 
 			StartNextWave = WaveInProgress = false;
 
-		TowerMenuActive = true;
+		TowerMenuActive = GenerateWave = true;
 
-		currentWave = 0;
+		currentWave = -1;
+
+		gold = 500;
+		health = 100;
+	}
+
+	void reset()
+	{
+		BunnySelected = SkunkSelected = ChipmunkSelected =
+			HedgehogSelected = RaccoonSelected = Pause =
+			StartNextWave = WaveInProgress = false;
+
+		TowerMenuActive = GenerateWave = true;
+
+		currentWave = -1;
 
 		gold = 500;
 		health = 100;
@@ -96,14 +110,8 @@ public:
 		chipmunk Chipmunk({ 0,0 });
 		hedgehog Hedgehog({ 0,0 });
 		raccoon Raccoon({ 0,0 });
-
-		/*Sprite BunnySprite("sprites/bunny.png", { 0, 0 });
-		Sprite SkunkSprite("sprites/skunk.png", { 0, 0 });
-		Sprite ChipmunkSprite("sprites/chipmunk.png", { 0, 0 });
-		Sprite HedgehogSprite("sprites/hedgehog.png", { 0, 0 });
-		Sprite RaccoonSprite("sprites/raccoon.png", { 0, 0 });*/
 		
-		// Generate Play/Pause Buttons
+		// Generate Play Button - Pause?
 		Button startWaveButton(sf::Vector2f(128, 128), sf::Vector2f(window.getSize().x - 128, window.getSize().y - 128), "play_button.png");
 
 		// Create Gold's and Health's texts and sprites
@@ -121,30 +129,13 @@ public:
 		std::vector<base_tower*> towers;
 
 		// Create wave
-		std::vector<std::vector<int>> waves;
-		waves.push_back({ 5, 5, 5 });
-
+		std::vector<std::vector<int>> waves; // { easy, medium, hard }
+		waves.push_back({ 4, 2, 1 }); // 0
+		waves.push_back({ 1, 0, 0 }); // 1
+		int enemiesDead = 0;
 		int enemiesCurrentSize = 0;
-		int enemiesTotalSize = waves[0][0] + waves[0][1] + waves[0][2];
+		int enemiesTotalSize = 0;
 		std::vector<Enemy> enemies;
-		for (int i = 0; i < waves[0][0]; i++) // easy enemies
-		{
-			Enemy easy(easyEnemyTexture, 5, 5, 1, 5);
-			easy.calcWaypoints(map.getTiles());
-			enemies.push_back(easy);
-		}
-		for (int i = 0; i < waves[0][1]; i++) // medium enemies
-		{
-			Enemy medium(mediumEnemyTexture, 5, 5, 1, 5);
-			medium.calcWaypoints(map.getTiles());
-			enemies.push_back(medium);
-		}
-		for (int i = 0; i < waves[0][2]; i++) // hard enemies
-		{
-			Enemy hard(hardEnemyTexture, 5, 5, 1, 5);
-			hard.calcWaypoints(map.getTiles());
-			enemies.push_back(hard);
-		}
 
 		sf::Clock clock;
 
@@ -254,12 +245,28 @@ public:
 				}
 			}
 
+			if (GenerateWave && enemiesDead == enemiesTotalSize)
+			{
+				WaveInProgress = false;
+				StartNextWave = false;
+				GenerateWave = false;
+				enemiesDead = 0;
+				enemiesCurrentSize = 0;
+				currentWave++;
+				if (!generateWave(currentWave, enemies, waves, easyEnemyTexture, mediumEnemyTexture, hardEnemyTexture, enemiesTotalSize))
+				{
+					std::cout << "WINNER!" << std::endl;
+					return;
+				}
+			}
+
 			if (StartNextWave && !WaveInProgress)
 			{
 				WaveInProgress = true;
+				GenerateWave = true;
 			}
 
-			if (enemiesCurrentSize < enemiesTotalSize && clock.getElapsedTime().asSeconds() >= 1 && WaveInProgress)
+			if (enemiesCurrentSize + enemiesDead < enemiesTotalSize && clock.getElapsedTime().asSeconds() >= 1 && WaveInProgress)
 			{
 				enemiesCurrentSize++;
 				clock.restart();
@@ -267,8 +274,23 @@ public:
 
 			for (int i = 0; i < enemiesCurrentSize; i++)
 			{
-				health -= enemies[i].move();
+				int damage = enemies[i].move();
+				if (damage > 0)
+				{
+					// enemy ran out of waypoints
+					enemies.erase(enemies.begin() + i);
+					enemiesDead++;
+					enemiesCurrentSize--;
+					i--;
+				}
+				health -= damage;
 				health_text.setString(std::to_string(health));
+			}
+
+			if (health <= 0)
+			{
+				std::cout << "You lose!" << std::endl;
+				return;
 			}
 
 			gold_text.setString(std::to_string(gold));
@@ -285,6 +307,14 @@ public:
 			window.draw(gold_text);
 			window.draw(health_text);
 			window.draw(towerMenuButton);
+			if (enemiesCurrentSize == 0)
+			{
+				startWaveButton.setFillColor(sf::Color::Green);
+			}
+			else
+			{
+				startWaveButton.setFillColor(sf::Color::Blue);
+			}
 			window.draw(startWaveButton);
 
 			if (TowerMenuActive)
@@ -332,7 +362,7 @@ private:
 	int gold;
 	int health;
 	int* map_tiles;
-	int* available; // if = 1 can place towe
+	int* available; // if == 1 can place tower
 
 	// Tower Menu
 	bool TowerMenuActive;
@@ -345,10 +375,44 @@ private:
 	// Wave
 	bool StartNextWave;
 	bool WaveInProgress;
+	bool GenerateWave;
 	int currentWave;
 
 	// Misc
 	bool Pause;
+
+	// returns false if no more waves to generate
+	bool generateWave(int currentWave, std::vector<Enemy>& enemies, std::vector<std::vector<int>>& waves,
+		sf::Texture& easyEnemyTexture, sf::Texture& mediumEnemyTexture, sf::Texture& hardEnemyTexture,
+		int &enemiesTotalSize)
+	{
+		bool success = false;
+		enemies.clear();
+		if (currentWave < waves.size())
+		{
+			success = true;
+			enemiesTotalSize = waves[currentWave][0] + waves[currentWave][1] + waves[currentWave][2];
+			for (int i = 0; i < waves[currentWave][0]; i++) // easy enemies
+			{
+				Enemy easy(easyEnemyTexture, 5, 5, 1, 50);
+				easy.calcWaypoints(map_tiles);
+				enemies.push_back(easy);
+			}
+			for (int i = 0; i < waves[currentWave][1]; i++) // medium enemies
+			{
+				Enemy medium(mediumEnemyTexture, 3, 5, 2.5, 100);
+				medium.calcWaypoints(map_tiles);
+				enemies.push_back(medium);
+			}
+			for (int i = 0; i < waves[currentWave][2]; i++) // hard enemies
+			{
+				Enemy hard(hardEnemyTexture, 7, 5, 2, 150);
+				hard.calcWaypoints(map_tiles);
+				enemies.push_back(hard);
+			}
+		}
+		return success;
+	}
 
 	void setAvailable(int** available, int* tiles)
 	{
