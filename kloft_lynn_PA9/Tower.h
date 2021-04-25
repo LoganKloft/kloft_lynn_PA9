@@ -7,7 +7,8 @@
 #include <cmath>
 
 
-#include "Enemy.h"	//
+#include "Enemy.h"
+#include "Bullet.h"
 
 class base_tower
 {
@@ -62,19 +63,19 @@ public:
 
 	void renderTower(sf::RenderWindow& cWindow) { cWindow.draw(towerSprite); };
 
-	void shootCheck()
+	void shootCheck(std::vector<Bullet*>& bullets)
 	{
 		if (shootTimer == 0)
 		{
 			shootTimer = shootSpeed;
-			shoot();
+			shoot(bullets);
 		}
 		else
 			shootTimer--;
 	}
 
 	//Abstract
-	virtual void shoot() = 0;
+	virtual void shoot(std::vector<Bullet*>& bullets) = 0;
 
 protected:
 	int sellPrice;
@@ -110,7 +111,7 @@ public:
 	}
 
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
 		std::cout << "Hedgehog Blast" << std::endl;
 	}
@@ -135,7 +136,7 @@ public:
 	}
 
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
 		std::cout << "Bunny Stunny" << std::endl;
 	}
@@ -159,7 +160,7 @@ public:
 		towerSprite.setTexture(towerTexture, true);
 	}
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
 		std::cout << "Raccoon Scratchy" << std::endl;
 	}
@@ -183,7 +184,7 @@ public:
 		towerSprite.setTexture(towerTexture, true);
 	}
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
 		std::cout << "Skunk Spray" << std::endl;
 	}
@@ -208,22 +209,8 @@ public:
 	}
 
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
-		std::cout << "Nut Throw" << std::endl;
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 2, 256, 3, rotation, towerTexture));
 	}
 };
-
-/*Methods:
-targetEnemy() // 
-sell() // destroys tower and returns portion of cost
-upgrade() // maybe interacts with an upgrade class that returns type of upgrade and
-	     // stores into an upgrades array (think Black Ops zombies perks like upgrades). OR 
-     // upgrades could be like level 1,2,3 or a tree
-renderTower() // pure virtual function - each inherited class looks different
-Data Members:
-Damage // damage dealt to enemies
-Range // radius for circle range - could look into other shapes
-BulletType // encapsulates object of type Bullet
-Upgrades // array that stores all upgrades on tower
-*/

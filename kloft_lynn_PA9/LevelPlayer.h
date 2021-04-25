@@ -14,6 +14,7 @@
 #include "Button.h"
 #include "Enemy.h"
 #include "Tower.h"
+#include "Bullet.h"
 #include "Sprite.h"
 
 #define WINDOW_WIDTH 1408
