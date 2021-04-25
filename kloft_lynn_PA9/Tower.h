@@ -7,7 +7,8 @@
 #include <cmath>
 
 
-#include "Enemy.h"	//
+#include "Enemy.h"
+#include "Bullet.h"
 
 class base_tower
 {
@@ -18,7 +19,6 @@ public:
 		shootTimer = 0;
 		rotation = 0;
 		this->setPosition({newPos.x,newPos.y});
-		bulletSprite.setOrigin(32, 32);
 		towerSprite.setOrigin(32, 32);
 	}
 
@@ -26,16 +26,12 @@ public:
 	int getPrice() { return sellPrice; }
 	float getDamage() { return damage; }
 	float getRange() { return range; }
-	sf::Sprite getTowerSprite() { return towerSprite; }
-	sf::Sprite getBulletSprite() { return bulletSprite; }
 	sf::Vector2i getPosition() { return { 32 + 64 * position.x ,32 + 64 * position.y }; }
 	int getRotation() { return rotation; }
 
 	void setPrice(int nSellPrice) { sellPrice = nSellPrice; }
 	void setDamage(float nDamage) { damage = nDamage; }
 	void setRange(float nRange) { range = nRange; }
-	void setTowerSprite(sf::Sprite nTowerSprite) { towerSprite = nTowerSprite; }
-	void setBulletSprite(sf::Sprite nBulletSprite) { bulletSprite = nBulletSprite; }
 	void setPosition(sf::Vector2i nPosition) { position = nPosition; towerSprite.setPosition(32 + 64*position.x, 32+64*position.y); }
 	void setRotation(int nRotation) { rotation = nRotation; towerSprite.setRotation(rotation); }
 
@@ -44,10 +40,10 @@ public:
 	{
 		for (int i = 0; i < enemies.size(); i++)
 		{	
-			if (sqrt((pow(enemies[i].getPosition().x - this->getPosition().x, 2))
+			if (!enemies[i].isDead() && sqrt((pow(enemies[i].getPosition().x - this->getPosition().x, 2))
 				+ (pow(enemies[i].getPosition().y - this->getPosition().y, 2))) <= range)
 			{
-				int newRotation = atan((enemies[i].getPosition().x - this->getPosition().x) / (enemies[i].getPosition().y - this->getPosition().y)) * -180 / 3.1415;
+				int newRotation = atan((enemies[i].getPosition().x - this->getPosition().x) / (enemies[i].getPosition().y - this->getPosition().y)) * -180 / 3.14159;
 
 				if (enemies[i].getPosition().y - this->getPosition().y >= 0)
 					this->setRotation(newRotation+180);
@@ -62,19 +58,19 @@ public:
 
 	void renderTower(sf::RenderWindow& cWindow) { cWindow.draw(towerSprite); };
 
-	void shootCheck()
+	void shootCheck(std::vector<Bullet*>& bullets)
 	{
 		if (shootTimer == 0)
 		{
 			shootTimer = shootSpeed;
-			shoot();
+			shoot(bullets);
 		}
 		else
 			shootTimer--;
 	}
 
 	//Abstract
-	virtual void shoot() = 0;
+	virtual void shoot(std::vector<Bullet*>& bullets) = 0;
 
 protected:
 	int sellPrice;
@@ -110,7 +106,7 @@ public:
 	}
 
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
 		std::cout << "Hedgehog Blast" << std::endl;
 	}
@@ -135,7 +131,7 @@ public:
 	}
 
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
 		std::cout << "Bunny Stunny" << std::endl;
 	}
@@ -159,7 +155,7 @@ public:
 		towerSprite.setTexture(towerTexture, true);
 	}
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
 		std::cout << "Raccoon Scratchy" << std::endl;
 	}
@@ -183,7 +179,7 @@ public:
 		towerSprite.setTexture(towerTexture, true);
 	}
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
 		std::cout << "Skunk Spray" << std::endl;
 	}
@@ -195,7 +191,7 @@ public:
 	chipmunk(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
-		damage = 10;
+		damage = 1;
 		range = 1000;
 		shootSpeed = 12;
 
@@ -205,12 +201,13 @@ public:
 		}
 
 		towerSprite.setTexture(towerTexture, true);
+
 	}
 
 
-	void shoot()
+	void shoot(std::vector<Bullet*>& bullets)
 	{
-		std::cout << "Nut Throw" << std::endl;
+		bullets.push_back(new Bullet((sf::Vector2f)this->getPosition(), 1.5, range, damage, rotation, towerTexture));
 	}
 };
 
