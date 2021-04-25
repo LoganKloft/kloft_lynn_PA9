@@ -29,7 +29,6 @@ public:
 	Enemy(const sf::Texture& texture, int health, float damage, float speed, int gold) : sf::Sprite(texture)
 	{
 		setOrigin(32, 32);
-		this->dead = false;
 		this->health = health;
 		this->damage = damage;
 		this->speed = speed;
@@ -37,9 +36,8 @@ public:
 		m_texture = texture;
 	}
 
-	Enemy(const Enemy& copy)
+	/*Enemy(const Enemy& copy) - this bad boy is not done correctly :>
 	{
-		this->dead = copy.isDead();
 		this->health = copy.getHealth();
 		this->damage = copy.getDamate();
 		this->speed = copy.getSpeed();
@@ -48,7 +46,7 @@ public:
 		this->setTexture(m_texture);
 		this->setOrigin(copy.getOrigin());
 		this->setPosition(copy.getPosition());
-	}
+	}*/
 
 	void setHealth(float health)
 	{
@@ -92,7 +90,6 @@ public:
 	{
 		waypoints.clear();
 		setPosition(-32, -32);
-		dead = true;
 		return gold;
 	}
 
@@ -350,10 +347,6 @@ public:
 	{
 		return gold;
 	}
-	bool isDead() const
-	{
-		return dead;
-	}
 	bool isWaypointsEmpty() const
 	{
 		return waypoints.empty();
@@ -376,7 +369,6 @@ public:
 		if (waypoints.empty())
 		{
 			std::cout << "Waypoints is empty" << std::endl;
-			die();
 			return damage;
 		}
 
@@ -388,17 +380,16 @@ public:
 			{
 
 				std::cout << "Waypoints is empty" << std::endl;
-				die();
 				return damage;
 			}
 
 			direction.x = (waypoints.front().x - getPosition().x) / 64;
 			direction.y = (waypoints.front().y - getPosition().y) / 64;
 
-			if (direction.x > 0) setRotation(0);
-			else if (direction.x < 0) setRotation(180);
-			else if (direction.y < 0) setRotation(270);
-			else setRotation(90);
+			if (direction.x > 0) setRotation(90);
+			else if (direction.x < 0) setRotation(270);
+			else if (direction.y < 0) setRotation(0);
+			else setRotation(180);
 		}
 		else
 		{
@@ -436,7 +427,6 @@ public:
 	}
 
 private:
-	bool dead;
 	int health;
 	float damage;
 	float speed;
