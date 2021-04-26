@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\sprites">
+      <UniqueIdentifier>{54bfa219-a01f-4c87-b81d-91dca0e76465}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,35 +49,56 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="roads2W.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="tileSet_1.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="sprites\bunny.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\sprites</Filter>
     </Image>
     <Image Include="sprites\chipmunk.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\sprites</Filter>
     </Image>
-    <Image Include="sprites\hedgehog.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="sprites\raccoon.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="sprites\skunk.png">
-      <Filter>Resource Files</Filter>
+    <Image Include="sprites\currency.png">
+      <Filter>Resource Files\sprites</Filter>
     </Image>
     <Image Include="sprites\easy_enemy.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\sprites</Filter>
     </Image>
     <Image Include="sprites\hard_enemy.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
+    <Image Include="sprites\hearts.png">
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
+    <Image Include="sprites\hedgehog.png">
+      <Filter>Resource Files\sprites</Filter>
     </Image>
     <Image Include="sprites\medium_enemy.png">
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
+    <Image Include="sprites\raccoon.png">
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
+    <Image Include="sprites\skunk.png">
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
+    <Image Include="roads2W.png">
       <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sprites\acorn.png">
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
+    <Image Include="sprites\spray.png">
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
+    <Image Include="sprites\scratch.png">
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
+    <Image Include="sprites\poop.png">
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
+    <Image Include="sprites\quill.png">
+      <Filter>Resource Files\sprites</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

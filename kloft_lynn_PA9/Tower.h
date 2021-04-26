@@ -41,7 +41,7 @@ public:
 	void setRotation(int nRotation) { rotation = nRotation; towerSprite.setRotation(rotation); }
 
 	//main methods
-	void targetEnemy(std::vector<Enemy>& enemies) 
+	void targetEnemy(std::vector<Enemy>& enemies, std::vector<Bullet*>& bullets)
 	{
 		for (int i = 0; i < enemies.size(); i++)
 		{	
@@ -54,6 +54,8 @@ public:
 					this->setRotation(newRotation+180);
 				else
 					this->setRotation(newRotation);
+
+				shootCheck(bullets);
 				break;
 			}
 		}
@@ -99,10 +101,15 @@ public:
 	{
 		sellPrice = 100;
 		damage = 10;
-		range = 1000;
+		range = 128;
 		shootSpeed = 60;
 		
 		if (!towerTexture.loadFromFile("sprites/hedgehog.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		if (!bulletTexture.loadFromFile("sprites/quill.png"))
 		{
 			std::cout << "Failed to load tank texture" << std::endl;
 		}
@@ -113,7 +120,14 @@ public:
 
 	void shoot(std::vector<Bullet*>& bullets)
 	{
-		std::cout << "Hedgehog Blast" << std::endl;
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation+45, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation+90, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation+135, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation+180, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation-45, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation-90, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation-135, bulletTexture));
 	}
 };
 
@@ -123,11 +137,16 @@ public:
 	bunny(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
-		damage = 10;
-		range = 1000;
+		damage = 2;
+		range = 320;
 		shootSpeed = 30;
 
 		if (!towerTexture.loadFromFile("sprites/bunny.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		if (!bulletTexture.loadFromFile("sprites/poop.png"))
 		{
 			std::cout << "Failed to load tank texture" << std::endl;
 		}
@@ -138,7 +157,7 @@ public:
 
 	void shoot(std::vector<Bullet*>& bullets)
 	{
-		std::cout << "Bunny Stunny" << std::endl;
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 2, range, damage, rotation, bulletTexture));
 	}
 };
 
@@ -148,11 +167,16 @@ public:
 	raccoon(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
-		damage = 10;
-		range = 1000;
+		damage = 5;
+		range = 96;
 		shootSpeed = 40;
 
 		if (!towerTexture.loadFromFile("sprites/raccoon.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		if (!bulletTexture.loadFromFile("sprites/scratch.png"))
 		{
 			std::cout << "Failed to load tank texture" << std::endl;
 		}
@@ -162,7 +186,8 @@ public:
 
 	void shoot(std::vector<Bullet*>& bullets)
 	{
-		std::cout << "Raccoon Scratchy" << std::endl;
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 0.4, range, damage, rotation + 8, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 0.4, range, damage, rotation - 8, bulletTexture));
 	}
 };
 
@@ -172,11 +197,16 @@ public:
 	skunk(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
-		damage = 10;
-		range = 1000;
+		damage = 3;
+		range = 128;
 		shootSpeed = 120;
 
 		if (!towerTexture.loadFromFile("sprites/skunk.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		if (!bulletTexture.loadFromFile("sprites/spray.png"))
 		{
 			std::cout << "Failed to load tank texture" << std::endl;
 		}
@@ -186,7 +216,9 @@ public:
 
 	void shoot(std::vector<Bullet*>& bullets)
 	{
-		std::cout << "Skunk Spray" << std::endl;
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation+10, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 1, range, damage, rotation-10, bulletTexture));
 	}
 };
 
@@ -196,11 +228,16 @@ public:
 	chipmunk(sf::Vector2i nPos) : base_tower(nPos)
 	{
 		sellPrice = 100;
-		damage = 10;
-		range = 1000;
+		damage = 1;
+		range = 384;
 		shootSpeed = 12;
 
 		if (!towerTexture.loadFromFile("sprites/chipmunk.png"))
+		{
+			std::cout << "Failed to load tank texture" << std::endl;
+		}
+
+		if (!bulletTexture.loadFromFile("sprites/acorn.png"))
 		{
 			std::cout << "Failed to load tank texture" << std::endl;
 		}
@@ -211,6 +248,6 @@ public:
 
 	void shoot(std::vector<Bullet*>& bullets)
 	{
-		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 2, 256, 3, rotation, towerTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 2, range, damage, rotation, bulletTexture));
 	}
 };

@@ -306,8 +306,7 @@ public:
 			{
 				if (WaveInProgress)
 				{
-					towers[i]->targetEnemy(enemies);
-					towers[i]->shootCheck(bullets);
+					towers[i]->targetEnemy(enemies,bullets);
 				}
 
 				towers[i]->renderTower(window);
@@ -411,19 +410,19 @@ private:
 			enemiesTotalSize = waves[currentWave][0] + waves[currentWave][1] + waves[currentWave][2];
 			for (int i = 0; i < waves[currentWave][0]; i++) // easy enemies
 			{
-				Enemy easy(easyEnemyTexture, 5, 5, 1, 50);
+				Enemy easy(easyEnemyTexture, 20, 1, 1, 50);
 				easy.calcWaypoints(map_tiles);
 				enemies.push_back(easy);
 			}
 			for (int i = 0; i < waves[currentWave][1]; i++) // medium enemies
 			{
-				Enemy medium(mediumEnemyTexture, 3, 5, 2, 100);
+				Enemy medium(mediumEnemyTexture, 15, 3, 2, 100);
 				medium.calcWaypoints(map_tiles);
 				enemies.push_back(medium);
 			}
 			for (int i = 0; i < waves[currentWave][2]; i++) // hard enemies
 			{
-				Enemy hard(hardEnemyTexture, 7, 5, .5, 150);
+				Enemy hard(hardEnemyTexture, 30, 5, .75, 150);
 				hard.calcWaypoints(map_tiles);
 				enemies.push_back(hard);
 			}
