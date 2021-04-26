@@ -25,6 +25,7 @@ public:
 		direction.y = sin((rotation-90) * 3.14159 / 180.0)*10*speed;
 		direction.x = cos((rotation - 90) * 3.14159 / 180.0)*10*speed;
 
+		sprite.setRotation(rotation);
 		sprite.setPosition(position.x, position.y);
 		sprite.setTexture(texture);
 		sprite.setOrigin(32, 32);

@@ -306,8 +306,7 @@ public:
 			{
 				if (WaveInProgress)
 				{
-					towers[i]->targetEnemy(enemies);
-					towers[i]->shootCheck(bullets);
+					towers[i]->targetEnemy(enemies,bullets);
 				}
 
 				towers[i]->renderTower(window);
