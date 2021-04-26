@@ -32,7 +32,9 @@ public:
 	{
 		BunnySelected = SkunkSelected = ChipmunkSelected = 
 			HedgehogSelected = RaccoonSelected = Pause = 
-			StartNextWave = WaveInProgress = false;
+			StartNextWave = WaveInProgress = BunnyHoverMenu =
+			SkunkHoverMenu = ChipmunkHoverMenu = HedgehogHoverMenu =
+			RaccoonHoverMenu = false;
 
 		TowerMenuActive = GenerateWave = true;
 
@@ -46,7 +48,9 @@ public:
 	{
 		BunnySelected = SkunkSelected = ChipmunkSelected =
 			HedgehogSelected = RaccoonSelected = Pause =
-			StartNextWave = WaveInProgress = false;
+			StartNextWave = WaveInProgress = BunnyHoverMenu =
+			SkunkHoverMenu = ChipmunkHoverMenu = HedgehogHoverMenu =
+			RaccoonHoverMenu = false;
 
 		TowerMenuActive = GenerateWave = true;
 
