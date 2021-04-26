@@ -22,7 +22,6 @@ public:
 
 		this->setTexture(m_texture);
 		this->setPosition(pos);
-		this->setOrigin(32, 32);
 	}
 private:
 	sf::Texture m_texture;

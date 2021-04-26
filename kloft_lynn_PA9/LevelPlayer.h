@@ -125,6 +125,8 @@ public:
 		sf::Text health_text(std::to_string(health), font, 50);
 		gold_text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, 0));
 		health_text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, 50));
+		Sprite gold_sprite("sprites/currency.png", sf::Vector2f(WINDOW_WIDTH / 2 - 64, 0));
+		Sprite health_sprite("sprites/hearts.png", sf::Vector2f(WINDOW_WIDTH / 2 - 64, 50));
 
 		// Stores towers
 		std::vector<base_tower*> towers;
@@ -153,6 +155,37 @@ public:
 				case sf::Event::Closed:
 					window.close();
 					break;
+				case sf::Event::MouseMoved:
+				{
+					if (TowerMenuActive)
+					{
+						for (int i = 0; i < towersSize; i++)
+						{
+							if (towerButtons[i].contains(event.mouseMove.x, event.mouseMove.y))
+							{
+								switch (i)
+								{
+								case BUNNY:
+									BunnyHoverMenu = true;
+									break;
+								case SKUNK:
+									SkunkHoverMenu = true;
+									break;
+								case CHIPMUNK:
+									ChipmunkHoverMenu = true;
+									break;
+								case HEDGEHOG:
+									HedgehogHoverMenu = true;
+									break;
+								case RACCOON:
+									RaccoonHoverMenu = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+				break;
 				case sf::Event::MouseButtonReleased:
 					if (event.mouseButton.button == sf::Mouse::Left)
 					{
@@ -322,6 +355,8 @@ public:
 
 			window.draw(gold_text);
 			window.draw(health_text);
+			window.draw(gold_sprite);
+			window.draw(health_sprite);
 			window.draw(towerMenuButton);
 			if (enemiesCurrentSize == 0)
 			{
@@ -339,6 +374,40 @@ public:
 				{
 					window.draw(towerButtons[i]);
 				}
+			}
+			if (BunnyHoverMenu)
+			{
+				hoverDisplay(window, Bunny, "Bunny");
+				if (sf::Mouse::getPosition(window).x > 128 ||
+					sf::Mouse::getPosition(window).y > 128) BunnyHoverMenu = false;
+			}
+			else if (SkunkHoverMenu)
+			{
+				hoverDisplay(window, Skunk, "Skunk");
+				if (sf::Mouse::getPosition(window).x > 128 ||
+					sf::Mouse::getPosition(window).y < 204 ||
+					sf::Mouse::getPosition(window).y > 332) SkunkHoverMenu = false;
+			}
+			else if (ChipmunkHoverMenu)
+			{
+				hoverDisplay(window, Chipmunk, "Chipmunk");
+				if (sf::Mouse::getPosition(window).x > 128 ||
+					sf::Mouse::getPosition(window).y < 408 ||
+					sf::Mouse::getPosition(window).y > 536) ChipmunkHoverMenu = false;
+			}
+			else if (HedgehogHoverMenu)
+			{
+				hoverDisplay(window, Hedgehog, "Hedgehog");
+				if (sf::Mouse::getPosition(window).x > 128 ||
+					sf::Mouse::getPosition(window).y < 612 ||
+					sf::Mouse::getPosition(window).y > 740) HedgehogHoverMenu = false;
+			}
+			else if (RaccoonHoverMenu)
+			{
+				hoverDisplay(window, Raccoon, "Raccoon");
+				if (sf::Mouse::getPosition(window).x > 128 ||
+					sf::Mouse::getPosition(window).y < 816 ||
+					sf::Mouse::getPosition(window).y > 944) RaccoonHoverMenu = false;
 			}
 
 			if (BunnySelected)
@@ -370,7 +439,6 @@ public:
 			{
 				window.draw(enemies[i]);
 			}
-
 			window.display();
 		}
 	}
@@ -383,10 +451,15 @@ private:
 	// Tower Menu
 	bool TowerMenuActive;
 	bool BunnySelected;
+	bool BunnyHoverMenu;
 	bool SkunkSelected;
+	bool SkunkHoverMenu;
 	bool ChipmunkSelected;
+	bool ChipmunkHoverMenu;
 	bool HedgehogSelected;
+	bool HedgehogHoverMenu;
 	bool RaccoonSelected;
+	bool RaccoonHoverMenu;
 
 	// Wave
 	bool StartNextWave;
@@ -396,6 +469,33 @@ private:
 
 	// Misc
 	bool Pause;
+
+	// polymorphism :-)
+	void hoverDisplay(sf::RenderWindow& window, base_tower& tower, const std::string &name)
+	{
+		int price = tower.getPrice();
+		int damage = tower.getDamage();
+		int range = tower.getRange();
+
+		sf::Vector2i pos(sf::Mouse::getPosition(window));
+		sf::Font font;
+		if (!font.loadFromFile("Arialic Hollow.ttf"))
+		{
+			std::cout << "Failed to load font in LevelPlayer (413)" << std::endl;
+		}
+
+		sf::Text name_text("Name: " + name, font, 30);
+		sf::Text price_text("Price: " + std::to_string(price), font, 30);
+		sf::Text damage_text("Damage: " + std::to_string(damage), font, 30);
+		sf::Text range_text("Range: " + std::to_string(range), font, 30);
+
+		name_text.setPosition(pos.x, pos.y);
+		price_text.setPosition(pos.x, pos.y + 30);
+		damage_text.setPosition(pos.x, pos.y + 60);
+		range_text.setPosition(pos.x, pos.y + 90);
+
+		window.draw(name_text); window.draw(price_text); window.draw(damage_text); window.draw(range_text);
+	}
 
 	// returns false if no more waves to generate
 	bool generateWave(int currentWave, std::vector<Enemy>& enemies, std::vector<std::vector<int>>& waves,
