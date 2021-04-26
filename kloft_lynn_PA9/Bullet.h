@@ -44,7 +44,7 @@ public:
 		return success;
 	}
 
-	void update(std::vector<Enemy>& enemies)
+	void update(std::vector<Enemy>& enemies, int &gold, int &enemiesDead, int &enemiesCurrentSize)
 	{
 		range -= sqrt(pow(direction.x, 2) + pow(direction.y, 2));		
 
@@ -53,7 +53,7 @@ public:
 		sprite.setPosition(position.x, position.y);
 
 		//Collision
-		for (int i = 0; i < enemies.size(); i++)
+		for (int i = 0; i < enemiesCurrentSize; i++)
 		{
 			if (sqrt((pow(enemies[i].getPosition().x - position.x, 2))
 				+ (pow(enemies[i].getPosition().y - position.y, 2))) <= 32)
@@ -64,7 +64,15 @@ public:
 					damage--;
 
 					if (enemies[i].getHealth() <= 0)
-						enemies[i].die();
+					{
+						int enemyGold = enemies[i].getGold();
+						gold += enemyGold;
+						enemiesDead++;
+						enemiesCurrentSize--;
+						enemies.erase(enemies.begin() + i);
+						i--;
+						break;
+					}
 				}
 			}
 		}

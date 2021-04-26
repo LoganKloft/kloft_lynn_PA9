@@ -134,8 +134,8 @@ public:
 
 		// Create wave
 		std::vector<std::vector<int>> waves; // { easy, medium, hard }
-		waves.push_back({ 4, 2, 1 }); // 0
-		waves.push_back({ 1, 0, 0 }); // 1
+		waves.push_back({ 3, 3, 3 }); // 0
+		waves.push_back({ 1, 1, 1 }); // 1
 		int enemiesDead = 0;
 		int enemiesCurrentSize = 0;
 		int enemiesTotalSize = 0;
@@ -315,7 +315,7 @@ public:
 
 			for (int i = 0; i < bullets.size(); i++)
 			{
-				bullets[i]->update(enemies);
+				bullets[i]->update(enemies, gold, enemiesDead, enemiesCurrentSize);
 				bullets[i]->renderBullet(window);
 				if (bullets[i]->needsRemoval())
 					bullets.erase(bullets.begin() + i);
@@ -417,13 +417,13 @@ private:
 			}
 			for (int i = 0; i < waves[currentWave][1]; i++) // medium enemies
 			{
-				Enemy medium(mediumEnemyTexture, 3, 5, 2.5, 100);
+				Enemy medium(mediumEnemyTexture, 3, 5, 2, 100);
 				medium.calcWaypoints(map_tiles);
 				enemies.push_back(medium);
 			}
 			for (int i = 0; i < waves[currentWave][2]; i++) // hard enemies
 			{
-				Enemy hard(hardEnemyTexture, 7, 5, 2, 150);
+				Enemy hard(hardEnemyTexture, 7, 5, .5, 150);
 				hard.calcWaypoints(map_tiles);
 				enemies.push_back(hard);
 			}
