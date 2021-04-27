@@ -34,7 +34,7 @@ public:
 			HedgehogSelected = RaccoonSelected = Pause = 
 			StartNextWave = WaveInProgress = BunnyHoverMenu =
 			SkunkHoverMenu = ChipmunkHoverMenu = HedgehogHoverMenu =
-			RaccoonHoverMenu = false;
+			RaccoonHoverMenu = CanRecycle = false;
 
 		TowerMenuActive = GenerateWave = true;
 
@@ -50,7 +50,7 @@ public:
 			HedgehogSelected = RaccoonSelected = Pause =
 			StartNextWave = WaveInProgress = BunnyHoverMenu =
 			SkunkHoverMenu = ChipmunkHoverMenu = HedgehogHoverMenu =
-			RaccoonHoverMenu = false;
+			RaccoonHoverMenu = CanRecycle = false;
 
 		TowerMenuActive = GenerateWave = true;
 
@@ -99,16 +99,16 @@ public:
 		}
 
 		// Generate Tower Buttons and Temporary Sprites
-		Button towerMenuButton(sf::Vector2f(32, 64),
+		Button towerMenuButton(sf::Vector2f(32, 64), sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), sf::Vector2f(32, 64),
 			sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), "vertical_3lines.png");
 
 		int towersSize = 5;
 		Button towerButtons[5] = {
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,0), "sprites/bunny.png"),
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,204), "sprites/skunk.png"),
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,408), "sprites/chipmunk.png"),
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,612), "sprites/hedgehog.png"),
-			Button(sf::Vector2f(128,128), sf::Vector2f(0,816), "sprites/raccoon.png") };
+			Button(sf::Vector2f(256,136), sf::Vector2f(0,0), sf::Vector2f(128,128), sf::Vector2f(64,0), "sprites/bunny.png"),
+			Button(sf::Vector2f(256,136), sf::Vector2f(0,204), sf::Vector2f(128,128), sf::Vector2f(64,204), "sprites/skunk.png"),
+			Button(sf::Vector2f(256,136), sf::Vector2f(0,408), sf::Vector2f(128,128), sf::Vector2f(64,408), "sprites/chipmunk.png"),
+			Button(sf::Vector2f(256,136), sf::Vector2f(0,612), sf::Vector2f(128,128), sf::Vector2f(64,612), "sprites/hedgehog.png"),
+			Button(sf::Vector2f(256,136), sf::Vector2f(0,816), sf::Vector2f(128,128), sf::Vector2f(64,816), "sprites/raccoon.png") };
 
 		bunny Bunny({ 0,0 });
 		skunk Skunk({ 0,0 });
@@ -117,20 +117,33 @@ public:
 		raccoon Raccoon({ 0,0 });
 		
 		// Generate Play Button - Pause?
-		Button startWaveButton(sf::Vector2f(128, 128), sf::Vector2f(window.getSize().x - 128, window.getSize().y - 128), "play_button.png");
+		Button startWaveButton(sf::Vector2f(128, 128), sf::Vector2f(window.getSize().x - 128, window.getSize().y - 128), 
+			sf::Vector2f(128, 128), sf::Vector2f(window.getSize().x - 128, window.getSize().y - 128), "play_button.png");
+
+		// NO PLACE TOWER BUTTON
+		Button recycleTowerButton(sf::Vector2f(128, 128), sf::Vector2f(0, window.getSize().y - 128),
+			sf::Vector2f(128, 128), sf::Vector2f(0, window.getSize().y - 128), "x_mark.png");
 
 		// Create Gold's and Health's texts and sprites
 		sf::Font font;
-		if (!font.loadFromFile("Arialic Hollow.ttf"))
+		if (!font.loadFromFile("SugarpunchDEMO.otf"))
 		{
 			std::cout << "Failed to load font in LevelPlayer (71)" << std::endl;
 		}
+
+		sf::Text round_text(std::to_string(currentWave+2), font, 50);
+		round_text.setPosition(sf::Vector2f(WINDOW_WIDTH-100, 0));
+
 		sf::Text gold_text(std::to_string(gold), font, 50);
 		sf::Text health_text(std::to_string(health), font, 50);
 		gold_text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, 0));
 		health_text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, 50));
 		Sprite gold_sprite("sprites/currency.png", sf::Vector2f(WINDOW_WIDTH / 2 - 64, 0));
 		Sprite health_sprite("sprites/hearts.png", sf::Vector2f(WINDOW_WIDTH / 2 - 64, 50));
+
+		//Opacity Boxes
+		sf::RectangleShape tower_background({ 256,WINDOW_HEIGHT });
+		tower_background.setFillColor({ 0,0,0,64});
 
 		// Stores towers
 		std::vector<base_tower*> towers;
@@ -140,8 +153,17 @@ public:
 
 		// Create wave
 		std::vector<std::vector<int>> waves; // { easy, medium, hard }
-		waves.push_back({ 3, 3, 3 }); // 0
-		waves.push_back({ 1, 1, 1 }); // 1
+		waves.push_back({ 5, 0, 0 }); // 0
+		waves.push_back({ 20, 0, 0 }); // 1
+		waves.push_back({ 10, 5, 0 }); // 2
+		waves.push_back({ 10, 10, 0 }); // 3
+		waves.push_back({ 20, 20, 0 }); // 4
+		waves.push_back({ 0, 40, 0 }); // 5
+		waves.push_back({ 20, 0, 5 }); // 6
+		waves.push_back({ 0, 15, 10 }); // 7
+		waves.push_back({ 20, 20, 20 }); // 8
+		waves.push_back({ 0, 30, 30 }); // 9
+
 		int enemiesDead = 0;
 		int enemiesCurrentSize = 0;
 		int enemiesTotalSize = 0;
@@ -193,6 +215,12 @@ public:
 				case sf::Event::MouseButtonReleased:
 					if (event.mouseButton.button == sf::Mouse::Left)
 					{
+						if (CanRecycle && recycleTowerButton.contains(event.mouseButton.x, event.mouseButton.y))
+						{
+							CanRecycle = BunnySelected =SkunkSelected = ChipmunkSelected = HedgehogSelected = RaccoonSelected = false;
+							TowerMenuActive = true;
+						}
+
 						if (TowerMenuActive)
 						{
 							for (int i = 0; i < towersSize; i++)
@@ -203,29 +231,39 @@ public:
 									{
 									case BUNNY:
 										BunnySelected = !BunnySelected;
+										TowerMenuActive = false;
+										BunnyHoverMenu = false;
 										SkunkSelected = ChipmunkSelected = HedgehogSelected = RaccoonSelected = false;
 										break;
 									case SKUNK:
 										SkunkSelected = !SkunkSelected;
+										TowerMenuActive = false;
+										SkunkHoverMenu = false;
 										BunnySelected = ChipmunkSelected = HedgehogSelected = RaccoonSelected = false;
 										break;
 									case CHIPMUNK:
 										ChipmunkSelected = !ChipmunkSelected;
+										TowerMenuActive = false;
+										ChipmunkHoverMenu = false;
 										SkunkSelected = BunnySelected = HedgehogSelected = RaccoonSelected = false;
 										break;
 									case HEDGEHOG:
 										HedgehogSelected = !HedgehogSelected;
+										TowerMenuActive = false;
+										HedgehogHoverMenu = false;
 										ChipmunkSelected = SkunkSelected = BunnySelected = RaccoonSelected = false;
 										break;
 									case RACCOON:
 										RaccoonSelected = !RaccoonSelected;
+										TowerMenuActive = false;
+										RaccoonHoverMenu = false;
 										HedgehogSelected = ChipmunkSelected = SkunkSelected = BunnySelected = false;
 										break;
 									}
 								}
 							}
 						}
-						if (BunnySelected &&!towerButtons[BUNNY].contains(event.mouseButton.x, event.mouseButton.y) && Bunny.getPrice() <= gold)
+						else if (BunnySelected && Bunny.getPrice() <= gold)
 						{
 							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
 							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
@@ -234,9 +272,10 @@ public:
 								available[y * MAX_LEVEL_WIDTH + x] = 0;
 								gold -= Bunny.getPrice();
 								towers.push_back(new bunny({ x, y }));
+								TowerMenuActive = true;
 							}
 						}
-						else if (SkunkSelected && !towerButtons[SKUNK].contains(event.mouseButton.x, event.mouseButton.y) && Skunk.getPrice() <= gold)
+						else if (SkunkSelected && Skunk.getPrice() <= gold)
 						{
 							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
 							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
@@ -245,9 +284,10 @@ public:
 								available[y * MAX_LEVEL_WIDTH + x] = 0;
 								gold -= Skunk.getPrice();
 								towers.push_back(new skunk({ x, y }));
+								TowerMenuActive = true;
 							}
 						}
-						else if (ChipmunkSelected && !towerButtons[CHIPMUNK].contains(event.mouseButton.x, event.mouseButton.y) && Chipmunk.getPrice() <= gold)
+						else if (ChipmunkSelected && Chipmunk.getPrice() <= gold)
 						{
 							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
 							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
@@ -256,9 +296,10 @@ public:
 								available[y * MAX_LEVEL_WIDTH + x] = 0;
 								gold -= Chipmunk.getPrice();
 								towers.push_back(new chipmunk({ x, y }));
+								TowerMenuActive = true;
 							}
 						}
-						else if (HedgehogSelected && !towerButtons[HEDGEHOG].contains(event.mouseButton.x, event.mouseButton.y) && Hedgehog.getPrice() <= gold)
+						else if (HedgehogSelected && Hedgehog.getPrice() <= gold)
 						{
 							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
 							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
@@ -267,9 +308,10 @@ public:
 								available[y * MAX_LEVEL_WIDTH + x] = 0;
 								gold -= Hedgehog.getPrice();
 								towers.push_back(new hedgehog({ x, y }));
+								TowerMenuActive = true;
 							}
 						}
-						else if (RaccoonSelected && !towerButtons[RACCOON].contains(event.mouseButton.x, event.mouseButton.y) && Raccoon.getPrice() <= gold)
+						else if (RaccoonSelected && Raccoon.getPrice() <= gold)
 						{
 							int x = sf::Mouse::getPosition(window).x / 64, y = sf::Mouse::getPosition(window).y / 64;
 							if (x >= 0 && x < MAX_LEVEL_WIDTH && y >= 0 && y < MAX_LEVEL_HEIGHT && available[y * MAX_LEVEL_WIDTH + x])
@@ -278,6 +320,7 @@ public:
 								available[y * MAX_LEVEL_WIDTH + x] = 0;
 								gold -= Raccoon.getPrice();
 								towers.push_back(new raccoon({ x, y }));
+								TowerMenuActive = true;
 							}
 						}
 						if (towerMenuButton.contains(event.mouseButton.x, event.mouseButton.y)) TowerMenuActive = !TowerMenuActive;
@@ -294,6 +337,7 @@ public:
 				enemiesDead = 0;
 				enemiesCurrentSize = 0;
 				currentWave++;
+				round_text.setString(std::to_string(currentWave+1));
 				if (!generateWave(currentWave, enemies, waves, easyEnemyTexture, mediumEnemyTexture, hardEnemyTexture, enemiesTotalSize))
 				{
 					std::cout << "WINNER!" << std::endl;
@@ -305,6 +349,7 @@ public:
 			{
 				WaveInProgress = true;
 				GenerateWave = true;
+				gold += (currentWave) % 3 * 25;
 			}
 
 			if (enemiesCurrentSize + enemiesDead < enemiesTotalSize && clock.getElapsedTime().asSeconds() >= 1 && WaveInProgress)
@@ -357,59 +402,49 @@ public:
 					bullets.erase(bullets.begin() + i);
 			}
 
-			window.draw(gold_text);
-			window.draw(health_text);
-			window.draw(gold_sprite);
-			window.draw(health_sprite);
-			window.draw(towerMenuButton);
-			if (enemiesCurrentSize == 0)
-			{
-				startWaveButton.setFillColor(sf::Color::Green);
-			}
-			else
-			{
-				startWaveButton.setFillColor(sf::Color::Blue);
-			}
-			window.draw(startWaveButton);
 
 			if (TowerMenuActive)
 			{
+				window.draw(tower_background);
+
 				for (int i = 0; i < towersSize; i++)
 				{
 					window.draw(towerButtons[i]);
 				}
 			}
+
+
 			if (BunnyHoverMenu)
 			{
 				hoverDisplay(window, Bunny, "Bunny");
-				if (sf::Mouse::getPosition(window).x > 128 ||
+				if (sf::Mouse::getPosition(window).x > 256 ||
 					sf::Mouse::getPosition(window).y > 128) BunnyHoverMenu = false;
 			}
 			else if (SkunkHoverMenu)
 			{
 				hoverDisplay(window, Skunk, "Skunk");
-				if (sf::Mouse::getPosition(window).x > 128 ||
+				if (sf::Mouse::getPosition(window).x > 256 ||
 					sf::Mouse::getPosition(window).y < 204 ||
 					sf::Mouse::getPosition(window).y > 332) SkunkHoverMenu = false;
 			}
 			else if (ChipmunkHoverMenu)
 			{
 				hoverDisplay(window, Chipmunk, "Chipmunk");
-				if (sf::Mouse::getPosition(window).x > 128 ||
+				if (sf::Mouse::getPosition(window).x > 256 ||
 					sf::Mouse::getPosition(window).y < 408 ||
 					sf::Mouse::getPosition(window).y > 536) ChipmunkHoverMenu = false;
 			}
 			else if (HedgehogHoverMenu)
 			{
 				hoverDisplay(window, Hedgehog, "Hedgehog");
-				if (sf::Mouse::getPosition(window).x > 128 ||
+				if (sf::Mouse::getPosition(window).x > 256 ||
 					sf::Mouse::getPosition(window).y < 612 ||
 					sf::Mouse::getPosition(window).y > 740) HedgehogHoverMenu = false;
 			}
 			else if (RaccoonHoverMenu)
 			{
 				hoverDisplay(window, Raccoon, "Raccoon");
-				if (sf::Mouse::getPosition(window).x > 128 ||
+				if (sf::Mouse::getPosition(window).x > 256 ||
 					sf::Mouse::getPosition(window).y < 816 ||
 					sf::Mouse::getPosition(window).y > 944) RaccoonHoverMenu = false;
 			}
@@ -443,6 +478,30 @@ public:
 			{
 				window.draw(enemies[i]);
 			}
+
+			window.draw(towerMenuButton);
+			if (enemiesCurrentSize == 0)
+			{
+				startWaveButton.setFillColor(sf::Color::Green);
+			}
+			else
+			{
+				startWaveButton.setFillColor(sf::Color::Blue);
+			}
+
+			window.draw(startWaveButton);
+			window.draw(gold_text);
+			window.draw(health_text);
+			window.draw(gold_sprite);
+			window.draw(round_text);
+			window.draw(health_sprite);
+
+
+			if (BunnySelected || RaccoonSelected || SkunkSelected || ChipmunkSelected || HedgehogSelected)
+			{
+				window.draw(recycleTowerButton);
+				CanRecycle = true;
+			}
 			window.display();
 		}
 	}
@@ -464,6 +523,7 @@ private:
 	bool HedgehogHoverMenu;
 	bool RaccoonSelected;
 	bool RaccoonHoverMenu;
+	bool CanRecycle;
 
 	// Wave
 	bool StartNextWave;
@@ -483,7 +543,7 @@ private:
 
 		sf::Vector2i pos(sf::Mouse::getPosition(window));
 		sf::Font font;
-		if (!font.loadFromFile("Arialic Hollow.ttf"))
+		if (!font.loadFromFile("SugarpunchDEMO.otf"))
 		{
 			std::cout << "Failed to load font in LevelPlayer (413)" << std::endl;
 		}
@@ -492,12 +552,28 @@ private:
 		sf::Text price_text("Price: " + std::to_string(price), font, 30);
 		sf::Text damage_text("Damage: " + std::to_string(damage), font, 30);
 		sf::Text range_text("Range: " + std::to_string(range), font, 30);
+		int yOffset = 0;
 
-		name_text.setPosition(pos.x, pos.y);
-		price_text.setPosition(pos.x, pos.y + 30);
-		damage_text.setPosition(pos.x, pos.y + 60);
-		range_text.setPosition(pos.x, pos.y + 90);
+		if (name == "Skunk")
+			yOffset = 204;
+		else if (name == "Chipmunk")
+			yOffset = 2* 204;
+		else if (name == "Hedgehog")
+			yOffset = 3* 204;
+		else if (name == "Raccoon")
+			yOffset = 4* 204;
 
+		sf::RectangleShape shadow({ 256,136 });
+		shadow.setFillColor({ 0,0,0,128 });
+		shadow.setPosition(0, yOffset);
+
+
+		name_text.setPosition(10, 5+yOffset);
+		price_text.setPosition(10, 35 + yOffset);
+		damage_text.setPosition(10, 65 + yOffset);
+		range_text.setPosition(10, 95 + yOffset);
+
+		window.draw(shadow);
 		window.draw(name_text); window.draw(price_text); window.draw(damage_text); window.draw(range_text);
 	}
 
@@ -514,19 +590,19 @@ private:
 			enemiesTotalSize = waves[currentWave][0] + waves[currentWave][1] + waves[currentWave][2];
 			for (int i = 0; i < waves[currentWave][0]; i++) // easy enemies
 			{
-				Enemy easy(easyEnemyTexture, 40, 1, 1.25, 10);
+				Enemy easy(easyEnemyTexture, 100, 1, 1.5, 10);
 				easy.calcWaypoints(map_tiles);
 				enemies.push_back(easy);
 			}
 			for (int i = 0; i < waves[currentWave][1]; i++) // medium enemies
 			{
-				Enemy medium(mediumEnemyTexture, 50, 3, 2.5, 30);
+				Enemy medium(mediumEnemyTexture, 125, 3, 2.75, 15);
 				medium.calcWaypoints(map_tiles);
 				enemies.push_back(medium);
 			}
 			for (int i = 0; i < waves[currentWave][2]; i++) // hard enemies
 			{
-				Enemy hard(hardEnemyTexture, 100, 5, 1, 50);
+				Enemy hard(hardEnemyTexture, 250, 5, 2.25, 20);
 				hard.calcWaypoints(map_tiles);
 				enemies.push_back(hard);
 			}
@@ -565,7 +641,7 @@ private:
 
 		std::vector<sf::Text> levelListText;
 		sf::Font font;
-		if (!font.loadFromFile("Arialic Hollow.ttf"))
+		if (!font.loadFromFile("SugarpunchDEMO.otf"))
 		{
 			std::cout << "Failed to load font in LevelPlayer (219)" << std::endl;
 		}
@@ -577,7 +653,8 @@ private:
 			levelListText.push_back(tmp);
 		}
 
-		Button exit_button(sf::Vector2f(64, 64), sf::Vector2f(0, 0), "x_mark.png");
+		Button exit_button(sf::Vector2f(64, 64), sf::Vector2f(0, 0), 
+			sf::Vector2f(64, 64), sf::Vector2f(0, 0), "x_mark.png");
 		sf::Event event;
 		bool flag = true;
 		int i = 0;

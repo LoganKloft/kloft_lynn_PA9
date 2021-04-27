@@ -113,5 +113,11 @@
     <Font Include="Bullpen3D.ttf">
       <Filter>Resource Files</Filter>
     </Font>
+    <Font Include="planet benson 2.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="SugarpunchDEMO.otf">
+      <Filter>Resource Files</Filter>
+    </Font>
   </ItemGroup>
 </Project>

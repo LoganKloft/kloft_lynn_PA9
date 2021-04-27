@@ -50,12 +50,12 @@ public:
 		generateTileOptions("tileSet_1.png", sf::Vector2u(64, 64), 8, 3, tileOptions);
 
 		// save and exit buttons
-		Button saveLevel(sf::Vector2f(64, 32), 
-			sf::Vector2f(window.getSize().x / 2 - 64, 0), "check_mark.png");
-		Button deleteLevel(sf::Vector2f(64, 32), 
-			sf::Vector2f(window.getSize().x / 2, 0), "x_mark.png");
-		Button viewTileMenuButton(sf::Vector2f(32, 64),
-			sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), "vertical_3lines.png");
+		Button saveLevel(sf::Vector2f(64, 32), sf::Vector2f(window.getSize().x / 2 - 64, 0),
+			sf::Vector2f(64, 32),sf::Vector2f(window.getSize().x / 2 - 64, 0), "check_mark.png");
+		Button deleteLevel(sf::Vector2f(64, 32), sf::Vector2f(window.getSize().x / 2, 0),
+			sf::Vector2f(64, 32),sf::Vector2f(window.getSize().x / 2, 0), "x_mark.png");
+		Button viewTileMenuButton(sf::Vector2f(32, 64), sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32),
+			sf::Vector2f(64, 32),sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), "vertical_3lines.png");
 
 		// Stores file name to store in level_list.txt
 		std::string saveName;
@@ -241,7 +241,8 @@ private:
 			levelListText.push_back(tmp);
 		}
 
-		Button exit_button(sf::Vector2f(64, 64), sf::Vector2f(0, 0), "x_mark.png");
+		Button exit_button(sf::Vector2f(64, 64), sf::Vector2f(0, 0), 
+			sf::Vector2f(64, 64), sf::Vector2f(0, 0), "x_mark.png");
 		sf::Event event;
 		bool flag = true;
 		int i = 0;

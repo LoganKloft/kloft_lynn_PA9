@@ -99,10 +99,10 @@ class hedgehog : public base_tower
 public:
 	hedgehog(sf::Vector2i nPos) : base_tower(nPos)
 	{
-		sellPrice = 100;
-		damage = 10;
+		sellPrice = 300;
+		damage = 20;
 		range = 128;
-		shootSpeed = 60;
+		shootSpeed = 50;
 		
 		if (!towerTexture.loadFromFile("sprites/hedgehog.png"))
 		{
@@ -136,8 +136,8 @@ class bunny : public base_tower
 public:
 	bunny(sf::Vector2i nPos) : base_tower(nPos)
 	{
-		sellPrice = 100;
-		damage = 2;
+		sellPrice = 150;
+		damage = 5;
 		range = 320;
 		shootSpeed = 30;
 
@@ -166,8 +166,8 @@ class raccoon : public base_tower
 public:
 	raccoon(sf::Vector2i nPos) : base_tower(nPos)
 	{
-		sellPrice = 100;
-		damage = 5;
+		sellPrice = 300;
+		damage = 30;
 		range = 96;
 		shootSpeed = 40;
 
@@ -196,8 +196,8 @@ class skunk : public base_tower
 public:
 	skunk(sf::Vector2i nPos) : base_tower(nPos)
 	{
-		sellPrice = 100;
-		damage = 3;
+		sellPrice = 200;
+		damage = 30;
 		range = 128;
 		shootSpeed = 120;
 
@@ -227,10 +227,10 @@ class chipmunk : public base_tower
 public:
 	chipmunk(sf::Vector2i nPos) : base_tower(nPos)
 	{
-		sellPrice = 100;
-		damage = 1;
+		sellPrice = 200;
+		damage = 4;
 		range = 384;
-		shootSpeed = 12;
+		shootSpeed = 20;
 
 		if (!towerTexture.loadFromFile("sprites/chipmunk.png"))
 		{

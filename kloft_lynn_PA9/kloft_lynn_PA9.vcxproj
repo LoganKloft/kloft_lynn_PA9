@@ -179,6 +179,8 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="Bullpen3D.ttf" />
+    <Font Include="planet benson 2.ttf" />
+    <Font Include="SugarpunchDEMO.otf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
