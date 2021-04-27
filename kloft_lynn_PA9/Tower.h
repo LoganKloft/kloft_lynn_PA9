@@ -186,8 +186,8 @@ public:
 
 	void shoot(std::vector<Bullet*>& bullets)
 	{
-		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 0.4, range, damage, rotation + 8, bulletTexture));
-		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 0.4, range, damage, rotation - 8, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 0.6, range, damage, rotation + 8, bulletTexture));
+		bullets.push_back(new Bullet((sf::Vector2f)getPosition(), 0.6, range, damage, rotation - 8, bulletTexture));
 	}
 };
 
