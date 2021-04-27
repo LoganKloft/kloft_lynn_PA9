@@ -514,19 +514,19 @@ private:
 			enemiesTotalSize = waves[currentWave][0] + waves[currentWave][1] + waves[currentWave][2];
 			for (int i = 0; i < waves[currentWave][0]; i++) // easy enemies
 			{
-				Enemy easy(easyEnemyTexture, 20, 1, 1, 50);
+				Enemy easy(easyEnemyTexture, 40, 1, 1.25, 10);
 				easy.calcWaypoints(map_tiles);
 				enemies.push_back(easy);
 			}
 			for (int i = 0; i < waves[currentWave][1]; i++) // medium enemies
 			{
-				Enemy medium(mediumEnemyTexture, 15, 3, 2, 100);
+				Enemy medium(mediumEnemyTexture, 50, 3, 2.5, 30);
 				medium.calcWaypoints(map_tiles);
 				enemies.push_back(medium);
 			}
 			for (int i = 0; i < waves[currentWave][2]; i++) // hard enemies
 			{
-				Enemy hard(hardEnemyTexture, 30, 5, .75, 150);
+				Enemy hard(hardEnemyTexture, 100, 5, 1, 50);
 				hard.calcWaypoints(map_tiles);
 				enemies.push_back(hard);
 			}
