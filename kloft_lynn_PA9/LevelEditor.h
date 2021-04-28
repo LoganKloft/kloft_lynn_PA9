@@ -136,6 +136,14 @@ public:
 							outfile.close();
 							return true;
 						}
+						else if (event2.text.unicode == 8)
+						{
+							if (!saveName.empty())
+							{
+								saveName.pop_back();
+								saveFileText.setString(saveName);
+							}
+						}
 						else if(event2.text.unicode <= 128)
 						{
 							saveName += event2.text.unicode;
