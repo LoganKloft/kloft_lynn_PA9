@@ -74,7 +74,7 @@ public:
 		if (map_name == "exit") return;
 
 		Level map;
-		if (!map.load("tileSet_1.png", sf::Vector2u(64, 64), map_name, 22, 16))
+		if (!map.load("tileset.png", sf::Vector2u(64, 64), map_name, 22, 16))
 		{
 			std::cout << "Failed to load map in LevelPlayer object" << std::endl;
 		}

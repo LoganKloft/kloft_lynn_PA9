@@ -39,7 +39,7 @@ public:
 		// select to create a new level or edit an existing one
 		std::string levelFile = selectLevel(window);
 		if (levelFile == "exit") return true;
-		if (!map.load("tileSet_1.png", sf::Vector2u(64, 64), levelFile, 22, 16))
+		if (!map.load("tileset.png", sf::Vector2u(64, 64), levelFile, 22, 16))
 		{
 			std::cout << "Failed to load level in LevelEditor" << std::endl;
 			return false;
@@ -47,7 +47,7 @@ public:
 
 		// generate images of tiles to use
 		std::vector<struct TileContainer> tileOptions;
-		generateTileOptions("tileSet_1.png", sf::Vector2u(64, 64), 8, 3, tileOptions);
+		generateTileOptions("tileset.png", sf::Vector2u(64, 64), 8, 3, tileOptions);
 
 		// save and exit buttons
 		Button saveLevel(sf::Vector2f(64, 32), sf::Vector2f(window.getSize().x / 2 - 64, 0),

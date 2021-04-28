@@ -100,11 +100,11 @@
     <Image Include="sprites\quill.png">
       <Filter>Resource Files\sprites</Filter>
     </Image>
+    <Image Include="tileset.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="testLevel.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="level_list.txt">
       <Filter>Resource Files</Filter>
     </Text>
