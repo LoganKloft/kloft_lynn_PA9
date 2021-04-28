@@ -55,7 +55,7 @@ public:
 		Button deleteLevel(sf::Vector2f(64, 32), sf::Vector2f(window.getSize().x / 2, 0),
 			sf::Vector2f(64, 32),sf::Vector2f(window.getSize().x / 2, 0), "x_mark.png");
 		Button viewTileMenuButton(sf::Vector2f(32, 64), sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32),
-			sf::Vector2f(64, 32),sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), "vertical_3lines.png");
+			sf::Vector2f(32, 64),sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), "vertical_3lines.png");
 
 		// Stores file name to store in level_list.txt
 		std::string saveName;
