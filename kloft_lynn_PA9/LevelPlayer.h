@@ -221,7 +221,9 @@ public:
 							TowerMenuActive = true;
 						}
 
-						if (TowerMenuActive)
+						else if (towerMenuButton.contains(event.mouseButton.x, event.mouseButton.y)) TowerMenuActive = !TowerMenuActive;
+						else if (startWaveButton.contains(event.mouseButton.x, event.mouseButton.y)) StartNextWave = !StartNextWave;
+						else if (TowerMenuActive)
 						{
 							for (int i = 0; i < towersSize; i++)
 							{
@@ -323,8 +325,6 @@ public:
 								TowerMenuActive = true;
 							}
 						}
-						if (towerMenuButton.contains(event.mouseButton.x, event.mouseButton.y)) TowerMenuActive = !TowerMenuActive;
-						if (startWaveButton.contains(event.mouseButton.x, event.mouseButton.y)) StartNextWave = !StartNextWave;
 					}
 				}
 			}
@@ -486,7 +486,7 @@ public:
 			}
 			else
 			{
-				startWaveButton.setFillColor(sf::Color::Blue);
+				startWaveButton.setFillColor({150,150,150});
 			}
 
 			window.draw(startWaveButton);
