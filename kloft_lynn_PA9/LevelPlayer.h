@@ -99,8 +99,8 @@ public:
 		}
 
 		// Generate Tower Buttons and Temporary Sprites
-		Button towerMenuButton(sf::Vector2f(32, 64), sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), sf::Vector2f(32, 64),
-			sf::Vector2f(window.getSize().x - 32, window.getSize().y / 2 - 32), "vertical_3lines.png");
+		Button towerMenuButton(sf::Vector2f(64, 64), sf::Vector2f(window.getSize().x - 64, window.getSize().y / 2 - 64), sf::Vector2f(64, 64),
+			sf::Vector2f(window.getSize().x - 64, window.getSize().y / 2 - 64), "sprites/GUI/menu.png");
 
 		int towersSize = 5;
 		Button towerButtons[5] = {
@@ -118,11 +118,11 @@ public:
 		
 		// Generate Play Button - Pause?
 		Button startWaveButton(sf::Vector2f(128, 128), sf::Vector2f(window.getSize().x - 128, window.getSize().y - 128), 
-			sf::Vector2f(128, 128), sf::Vector2f(window.getSize().x - 128, window.getSize().y - 128), "play_button.png");
+			sf::Vector2f(128, 128), sf::Vector2f(window.getSize().x - 128, window.getSize().y - 128), "sprites/GUI/play_button.png");
 
 		// NO PLACE TOWER BUTTON
 		Button recycleTowerButton(sf::Vector2f(128, 128), sf::Vector2f(0, window.getSize().y - 128),
-			sf::Vector2f(128, 128), sf::Vector2f(0, window.getSize().y - 128), "x_mark.png");
+			sf::Vector2f(128, 128), sf::Vector2f(0, window.getSize().y - 128), "sprites/GUI/xmark.png");
 
 		// Create Gold's and Health's texts and sprites
 		sf::Font font;
@@ -654,7 +654,7 @@ private:
 		}
 
 		Button exit_button(sf::Vector2f(64, 64), sf::Vector2f(0, 0), 
-			sf::Vector2f(64, 64), sf::Vector2f(0, 0), "x_mark.png");
+			sf::Vector2f(64, 64), sf::Vector2f(0, 0), "sprites/GUI/xmark.png");
 		sf::Event event;
 		bool flag = true;
 		int i = 0;
