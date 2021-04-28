@@ -112,6 +112,9 @@
     <Image Include="tileset.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="sprites\Professor_O_Fallon.png">
+      <Filter>Resource Files\sprites</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="level_list.txt">
