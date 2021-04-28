@@ -115,6 +115,9 @@ public:
 		chipmunk Chipmunk({ 0,0 });
 		hedgehog Hedgehog({ 0,0 });
 		raccoon Raccoon({ 0,0 });
+
+		sf::CircleShape rangeCircle(100, 30);
+		rangeCircle.setFillColor({ 0, 255, 0, 30 });
 		
 		// Generate Play Button - Pause?
 		Button startWaveButton(sf::Vector2f(128, 128), sf::Vector2f(window.getSize().x - 128, window.getSize().y - 128), 
@@ -210,6 +213,14 @@ public:
 							}
 						}
 					}
+					if (!available[event.mouseMove.y / 64 * MAX_LEVEL_WIDTH + event.mouseMove.x / 64])
+					{
+						rangeCircle.setFillColor({ 255, 0, 0, 30 });
+					}
+					else
+					{
+						rangeCircle.setFillColor({ 0, 255, 0, 30 });
+					}
 				}
 				break;
 				case sf::Event::MouseButtonReleased:
@@ -236,30 +247,40 @@ public:
 										TowerMenuActive = false;
 										BunnyHoverMenu = false;
 										SkunkSelected = ChipmunkSelected = HedgehogSelected = RaccoonSelected = false;
+										rangeCircle.setRadius(Bunny.getRange());
+										rangeCircle.setOrigin(rangeCircle.getRadius(), rangeCircle.getRadius());
 										break;
 									case SKUNK:
 										SkunkSelected = !SkunkSelected;
 										TowerMenuActive = false;
 										SkunkHoverMenu = false;
 										BunnySelected = ChipmunkSelected = HedgehogSelected = RaccoonSelected = false;
+										rangeCircle.setRadius(Skunk.getRange());
+										rangeCircle.setOrigin(rangeCircle.getRadius(), rangeCircle.getRadius());
 										break;
 									case CHIPMUNK:
 										ChipmunkSelected = !ChipmunkSelected;
 										TowerMenuActive = false;
 										ChipmunkHoverMenu = false;
 										SkunkSelected = BunnySelected = HedgehogSelected = RaccoonSelected = false;
+										rangeCircle.setRadius(Chipmunk.getRange());
+										rangeCircle.setOrigin(rangeCircle.getRadius(), rangeCircle.getRadius());
 										break;
 									case HEDGEHOG:
 										HedgehogSelected = !HedgehogSelected;
 										TowerMenuActive = false;
 										HedgehogHoverMenu = false;
 										ChipmunkSelected = SkunkSelected = BunnySelected = RaccoonSelected = false;
+										rangeCircle.setRadius(Hedgehog.getRange());
+										rangeCircle.setOrigin(rangeCircle.getRadius(), rangeCircle.getRadius());
 										break;
 									case RACCOON:
 										RaccoonSelected = !RaccoonSelected;
 										TowerMenuActive = false;
 										RaccoonHoverMenu = false;
 										HedgehogSelected = ChipmunkSelected = SkunkSelected = BunnySelected = false;
+										rangeCircle.setRadius(Raccoon.getRange());
+										rangeCircle.setOrigin(rangeCircle.getRadius(), rangeCircle.getRadius());
 										break;
 									}
 								}
@@ -452,26 +473,41 @@ public:
 			if (BunnySelected)
 			{
 				Bunny.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				rangeCircle.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x / 64 * 64 + 32,
+					sf::Mouse::getPosition(window).y / 64 * 64 + 32));
+				window.draw(rangeCircle);
 				Bunny.renderTower(window);
 			}
 			else if (SkunkSelected)
 			{
 				Skunk.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				rangeCircle.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x / 64 * 64 + 32,
+					sf::Mouse::getPosition(window).y / 64 * 64 + 32));
+				window.draw(rangeCircle);
 				Skunk.renderTower(window);
 			}
 			else if (ChipmunkSelected)
 			{
 				Chipmunk.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				rangeCircle.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x / 64 * 64 + 32,
+					sf::Mouse::getPosition(window).y / 64 * 64 + 32));
+				window.draw(rangeCircle);
 				Chipmunk.renderTower(window);
 			}
 			else if (HedgehogSelected)
 			{
 				Hedgehog.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				rangeCircle.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x / 64 * 64 + 32,
+					sf::Mouse::getPosition(window).y / 64 * 64 + 32));
+				window.draw(rangeCircle);
 				Hedgehog.renderTower(window);
 			}
 			else if (RaccoonSelected)
 			{
 				Raccoon.setPosition(sf::Vector2i(sf::Mouse::getPosition(window).x / 64, sf::Mouse::getPosition(window).y / 64));
+				rangeCircle.setPosition(sf::Vector2f(sf::Mouse::getPosition(window).x / 64 * 64 + 32,
+					sf::Mouse::getPosition(window).y / 64 * 64 + 32));
+				window.draw(rangeCircle);
 				Raccoon.renderTower(window);
 			}
 			for (int i = 0; i < enemiesCurrentSize; i++)
