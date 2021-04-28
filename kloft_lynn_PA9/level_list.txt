@@ -1,1 +1,1 @@
-easy.txt,medium.txt,hard.txt,impossible.txt,
+test.txt,easy.txt,medium.txt,hard.txt,impossible.txt,

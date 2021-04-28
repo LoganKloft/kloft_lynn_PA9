@@ -378,7 +378,6 @@ public:
 
 			if (waypoints.empty())
 			{
-
 				std::cout << "Waypoints is empty" << std::endl;
 				return damage;
 			}

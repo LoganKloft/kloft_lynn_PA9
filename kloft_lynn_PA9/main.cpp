@@ -10,6 +10,11 @@
 #include "LevelPlayer.h"
 #include "testClass.h"
 
+
+#include <windows.h>
+
+
+#define _WIN32_WINNT 0x0500
 #define WINDOW_WIDTH 1408
 #define WINDOW_HEIGHT 1024
 
@@ -22,6 +27,10 @@
 */
 int main(void)
 {
+	HWND hWnd = GetConsoleWindow();
+	ShowWindow(hWnd, SW_HIDE);
+
+
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Habitation Defense - Lynn/Kloft", sf::Style::Close);
 	window.setFramerateLimit(60);
 	LevelEditor lEditor;
