@@ -6,9 +6,9 @@
 #include <SFML/System.hpp>
 #include <SFML/Network.hpp>
 
-#include "Level.h"
 #include "LevelEditor.h"
 #include "LevelPlayer.h"
+#include "testClass.h"
 
 #define WINDOW_WIDTH 1408
 #define WINDOW_HEIGHT 1024
@@ -26,17 +26,20 @@ int main(void)
 	LevelPlayer lPlayer;
 
 	sf::Font font;
-	if (!font.loadFromFile("Arialic Hollow.ttf"))
+	if (!font.loadFromFile("SugarpunchDEMO.otf"))
 	{
 		std::cout << "Failed to load font: Main(26)" << std::endl;
 		return -1;
 	}
 
-	sf::Text editLevelText("EDIT", font, 100);
-	editLevelText.move(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 300);
-
 	sf::Text playLevelText("PLAY", font, 100);
-	playLevelText.move(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 300);
+	playLevelText.move(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 4 - 100);
+
+	sf::Text editLevelText("EDIT", font, 100);
+	editLevelText.move(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 - 100);
+
+	sf::Text testCasesText("TEST", font, 100);
+	testCasesText.move(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 4 * 3 - 100);
 
 	sf::Event event;
 	while (window.isOpen())
@@ -52,14 +55,18 @@ int main(void)
 			case sf::Event::MouseButtonReleased:
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					if (sf::Mouse::getPosition(window).y > WINDOW_HEIGHT / 2)
+					if (sf::Mouse::getPosition(window).y < WINDOW_HEIGHT / 3)
+					{
+						lPlayer.run(window);
+						lPlayer.reset();
+					}
+					else if(sf::Mouse::getPosition(window).y < WINDOW_HEIGHT / 3 * 2)
 					{
 						lEditor.edit(window);
 					}
 					else
 					{
-						lPlayer.run(window);
-						lPlayer.reset();
+						testClass tClass(window);
 					}
 				}
 				break;
@@ -72,6 +79,7 @@ int main(void)
 		window.clear();
 		window.draw(editLevelText);
 		window.draw(playLevelText);
+		window.draw(testCasesText);
 		window.display();
 	}
 
