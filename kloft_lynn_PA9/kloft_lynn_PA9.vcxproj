@@ -167,6 +167,7 @@
     <Image Include="sprites\hedgehog.png" />
     <Image Include="sprites\medium_enemy.png" />
     <Image Include="sprites\poop.png" />
+    <Image Include="sprites\Professor_O_Fallon.png" />
     <Image Include="sprites\quill.png" />
     <Image Include="sprites\raccoon.png" />
     <Image Include="sprites\scratch.png" />
