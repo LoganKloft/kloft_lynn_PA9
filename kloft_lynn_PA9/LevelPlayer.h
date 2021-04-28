@@ -144,6 +144,12 @@ public:
 		Sprite gold_sprite("sprites/currency.png", sf::Vector2f(WINDOW_WIDTH / 2 - 64, 0));
 		Sprite health_sprite("sprites/hearts.png", sf::Vector2f(WINDOW_WIDTH / 2 - 64, 50));
 
+		// Pause Menu
+		sf::RectangleShape pauseMenuBackground(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
+		pauseMenuBackground.setFillColor({ 0, 0, 0, 60 });
+		Button exitGameButton(sf::Vector2f(128, 128), sf::Vector2f(WINDOW_WIDTH / 2 - 64, WINDOW_HEIGHT / 2 - 64),
+			sf::Vector2f(128, 128), sf::Vector2f(WINDOW_WIDTH / 2 - 64, WINDOW_HEIGHT / 2 - 64), "sprites/GUI/xmark.png");
+
 		//Opacity Boxes
 		sf::RectangleShape tower_background({ 256,WINDOW_HEIGHT });
 		tower_background.setFillColor({ 0,0,0,64});
@@ -222,7 +228,7 @@ public:
 						rangeCircle.setFillColor({ 0, 255, 0, 30 });
 					}
 				}
-				break;
+					break;
 				case sf::Event::MouseButtonReleased:
 					if (event.mouseButton.button == sf::Mouse::Left)
 					{
@@ -347,10 +353,23 @@ public:
 							}
 						}
 					}
+					if (Pause)
+					{
+						if (exitGameButton.contains(event.mouseButton.x, event.mouseButton.y))
+						{
+							return;
+						}
+					}
+					break;
+				case sf::Event::TextEntered:
+					if (event.text.unicode == 27) // escape
+					{
+						Pause = !Pause;
+					}
 				}
 			}
 
-			if (GenerateWave && enemiesDead == enemiesTotalSize)
+			if (GenerateWave && enemiesDead == enemiesTotalSize && !Pause)
 			{
 				WaveInProgress = false;
 				StartNextWave = false;
@@ -366,32 +385,35 @@ public:
 				}
 			}
 
-			if (StartNextWave && !WaveInProgress)
+			if (StartNextWave && !WaveInProgress && !Pause)
 			{
 				WaveInProgress = true;
 				GenerateWave = true;
 				gold += (currentWave) % 3 * 25;
 			}
 
-			if (enemiesCurrentSize + enemiesDead < enemiesTotalSize && clock.getElapsedTime().asSeconds() >= 1 && WaveInProgress)
+			if (enemiesCurrentSize + enemiesDead < enemiesTotalSize && clock.getElapsedTime().asSeconds() >= 1 && WaveInProgress && !Pause)
 			{
 				enemiesCurrentSize++;
 				clock.restart();
 			}
 
-			for (int i = 0; i < enemiesCurrentSize; i++)
+			if (!Pause)
 			{
-				int damage = enemies[i].move();
-				if (damage > 0)
+				for (int i = 0; i < enemiesCurrentSize; i++)
 				{
-					// enemy ran out of waypoints
-					enemies.erase(enemies.begin() + i);
-					enemiesDead++;
-					enemiesCurrentSize--;
-					i--;
+					int damage = enemies[i].move();
+					if (damage > 0)
+					{
+						// enemy ran out of waypoints
+						enemies.erase(enemies.begin() + i);
+						enemiesDead++;
+						enemiesCurrentSize--;
+						i--;
+					}
+					health -= damage;
+					health_text.setString(std::to_string(health));
 				}
-				health -= damage;
-				health_text.setString(std::to_string(health));
 			}
 
 			if (health <= 0)
@@ -407,7 +429,7 @@ public:
 
 			for (int i = 0; i < towers.size(); i++)
 			{
-				if (WaveInProgress)
+				if (WaveInProgress && !Pause)
 				{
 					towers[i]->targetEnemy(enemies,bullets);
 				}
@@ -538,6 +560,13 @@ public:
 				window.draw(recycleTowerButton);
 				CanRecycle = true;
 			}
+
+			if (Pause)
+			{
+				window.draw(pauseMenuBackground);
+				window.draw(exitGameButton);
+			}
+
 			window.display();
 		}
 	}
