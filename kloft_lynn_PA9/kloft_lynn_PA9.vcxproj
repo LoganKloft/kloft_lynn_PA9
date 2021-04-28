@@ -152,6 +152,7 @@
     <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="LevelPlayer.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="testClass.h" />
     <ClInclude Include="Tower.h" />
   </ItemGroup>
   <ItemGroup>

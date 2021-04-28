@@ -26,9 +26,9 @@ public:
 	{
 		// default font for sf::Text objects
 		sf::Font font;
-		if (!font.loadFromFile("Arialic Hollow.ttf"))
+		if (!font.loadFromFile("SugarpunchDEMO.otf"))
 		{
-			std::cout << "Failed to load font \"Arrialic Hollow.ttf\": LevelEditor(102)" << std::endl;
+			std::cout << "Failed to load font \"SugarpunchDEMO.otf\": LevelEditor(102)" << std::endl;
 			return -1;
 		}
 		Level map;
@@ -233,7 +233,7 @@ private:
 
 		std::vector<sf::Text> levelListText;
 		sf::Font font;
-		font.loadFromFile("Arialic Hollow.ttf");
+		font.loadFromFile("SugarpunchDEMO.otf");
 		for (int i = 0; i < level_list.size(); i++)
 		{
 			sf::Text tmp(level_list[i], font, 50);

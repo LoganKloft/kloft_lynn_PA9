@@ -1,1 +1,1 @@
-TestMap1.txt,level2.txt,jeremiah lynn.txt,level1.txt,aaa.txt,testLevel.txt,
+bottomr.txt,bottoml.txt,topr.txt,topl.txt,vertical.txt,horizontal.txt,TestMap1.txt,level2.txt,jeremiah lynn.txt,level1.txt,aaa.txt,testLevel.txt,
