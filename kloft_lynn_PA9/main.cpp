@@ -20,9 +20,7 @@
 
 /*
 *	Credits:
-*	tileset: KUBI Games https://kubigames.itch.io/road-tiles
-*	font: Typodermic Fonts 	https://www.1001freefonts.com/bullpen-3d.font, Gem Fonts https://www.1001freefonts.com/arialic-hollow.font,
-*	https://www.1001fonts.com/sugarpunch-demo-font.html Jakob Fischer / pizzadude.dk, https://www.1001fonts.com/planet-benson-2-font.html Raymond Larabie
+*	font: https://www.1001fonts.com/sugarpunch-demo-font.html Jakob Fischer / pizzadude.dk
 *	Professor Andrew O'Fallon Image: https://s3.wp.wsu.edu/uploads/sites/908/2019/11/Andy-O%E2%80%99Fallon-e1589485912918-198x198.jpg
 */
 
