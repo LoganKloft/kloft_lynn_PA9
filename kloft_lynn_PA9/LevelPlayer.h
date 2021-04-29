@@ -361,13 +361,27 @@ public:
 						}
 					}
 					break;
-				case sf::Event::TextEntered:
-					if (event.text.unicode == 27) // escape
+				case sf::Event::KeyPressed:
+					if (event.key.code == sf::Keyboard::Escape) // escape
 					{
 						Pause = !Pause;
 					}
+					else if (event.key.code == sf::Keyboard::LShift)
+					{
+						window.setFramerateLimit(120);
+					}
+					break;
+				case sf::Event::KeyReleased:
+					if (event.key.code == sf::Keyboard::LShift)
+					{
+						window.setFramerateLimit(60);
+					}
 				}
 			}
+
+
+			if (enemiesDead == enemiesTotalSize && enemiesDead)
+				gold += 50;
 
 			if (GenerateWave && enemiesDead == enemiesTotalSize && !Pause)
 			{
@@ -389,7 +403,6 @@ public:
 			{
 				WaveInProgress = true;
 				GenerateWave = true;
-				gold += (currentWave) % 3 * 25;
 			}
 
 			if (enemiesCurrentSize + enemiesDead < enemiesTotalSize && clock.getElapsedTime().asSeconds() >= 1 && WaveInProgress && !Pause)
@@ -538,7 +551,7 @@ public:
 			}
 
 			window.draw(towerMenuButton);
-			if (enemiesCurrentSize == 0)
+			if (!WaveInProgress)
 			{
 				startWaveButton.setFillColor(sf::Color::Green);
 			}
@@ -655,19 +668,19 @@ private:
 			enemiesTotalSize = waves[currentWave][0] + waves[currentWave][1] + waves[currentWave][2];
 			for (int i = 0; i < waves[currentWave][0]; i++) // easy enemies
 			{
-				Enemy easy(easyEnemyTexture, 100, 1, 1.5, 10);
+				Enemy easy(easyEnemyTexture, 150, 1, 2, 10);
 				easy.calcWaypoints(map_tiles);
 				enemies.push_back(easy);
 			}
 			for (int i = 0; i < waves[currentWave][1]; i++) // medium enemies
 			{
-				Enemy medium(mediumEnemyTexture, 125, 3, 2.75, 15);
+				Enemy medium(mediumEnemyTexture, 300, 3, 2.75, 15);
 				medium.calcWaypoints(map_tiles);
 				enemies.push_back(medium);
 			}
 			for (int i = 0; i < waves[currentWave][2]; i++) // hard enemies
 			{
-				Enemy hard(hardEnemyTexture, 250, 5, 2.25, 20);
+				Enemy hard(hardEnemyTexture, 600, 5, 3, 20);
 				hard.calcWaypoints(map_tiles);
 				enemies.push_back(hard);
 			}

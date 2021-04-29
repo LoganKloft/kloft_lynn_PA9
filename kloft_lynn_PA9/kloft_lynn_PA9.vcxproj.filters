@@ -120,6 +120,9 @@
     <Text Include="level_list.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="horizontal.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Bullpen3D.ttf">

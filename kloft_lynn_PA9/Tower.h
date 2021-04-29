@@ -99,7 +99,7 @@ class hedgehog : public base_tower
 public:
 	hedgehog(sf::Vector2i nPos) : base_tower(nPos)
 	{
-		sellPrice = 300;
+		sellPrice = 250;
 		damage = 20;
 		range = 128;
 		shootSpeed = 50;
@@ -227,7 +227,7 @@ class chipmunk : public base_tower
 public:
 	chipmunk(sf::Vector2i nPos) : base_tower(nPos)
 	{
-		sellPrice = 200;
+		sellPrice = 175;
 		damage = 4;
 		range = 384;
 		shootSpeed = 20;

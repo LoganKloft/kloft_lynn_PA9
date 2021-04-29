@@ -179,6 +179,7 @@
     <Image Include="tileSet_1.png" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="horizontal.txt" />
     <Text Include="level_list.txt" />
   </ItemGroup>
   <ItemGroup>
