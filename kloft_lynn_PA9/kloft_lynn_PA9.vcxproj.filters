@@ -58,9 +58,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="tileSet_1.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="sprites\bunny.png">
       <Filter>Resource Files\sprites</Filter>
     </Image>
@@ -91,9 +88,6 @@
     <Image Include="sprites\skunk.png">
       <Filter>Resource Files\sprites</Filter>
     </Image>
-    <Image Include="roads2W.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="sprites\acorn.png">
       <Filter>Resource Files\sprites</Filter>
     </Image>
@@ -120,17 +114,11 @@
     <Text Include="level_list.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="horizontal.txt">
+    <Text Include="README.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="Bullpen3D.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
-    <Font Include="planet benson 2.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
     <Font Include="SugarpunchDEMO.otf">
       <Filter>Resource Files</Filter>
     </Font>

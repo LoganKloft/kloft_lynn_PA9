@@ -158,7 +158,6 @@
     <ClInclude Include="Tower.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="roads2W.png" />
     <Image Include="sprites\acorn.png" />
     <Image Include="sprites\bunny.png" />
     <Image Include="sprites\chipmunk.png" />
@@ -176,15 +175,12 @@
     <Image Include="sprites\skunk.png" />
     <Image Include="sprites\spray.png" />
     <Image Include="tileset.png" />
-    <Image Include="tileSet_1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="horizontal.txt" />
     <Text Include="level_list.txt" />
+    <Text Include="README.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="Bullpen3D.ttf" />
-    <Font Include="planet benson 2.ttf" />
     <Font Include="SugarpunchDEMO.otf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
